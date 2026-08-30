@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './hooks/AuthProvider.jsx'
 import { useAuth }     from './hooks/useAuth.jsx'
+import CookieConsent   from './components/ui/CookieConsent.jsx'
 
 // Lazy load pages
 const LandingPage        = lazy(() => import('./pages/LandingPage.jsx'))
@@ -11,6 +12,9 @@ const DashboardPage      = lazy(() => import('./pages/DashboardPage.jsx'))
 const ResumeEditorPage   = lazy(() => import('./pages/ResumeEditorPage.jsx'))
 const PublicResumePage   = lazy(() => import('./pages/PublicResumePage.jsx'))
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage.jsx'))
+const PrivacyPolicyPage  = lazy(() => import('./pages/PrivacyPolicyPage.jsx'))
+const TermsPage          = lazy(() => import('./pages/TermsPage.jsx'))
+const NotFoundPage       = lazy(() => import('./pages/NotFoundPage.jsx'))
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -26,7 +30,7 @@ function PublicRoute({ children }) {
 
 function FullPageSpinner() {
   return (
-    <div className="full-page-center">
+    <div className="full-page-center" role="status" aria-label="Loading page">
       <div style={{ textAlign: 'center' }}>
         <div className="spinner lg" style={{ margin: '0 auto 16px' }} />
         <p className="text-muted" style={{ fontSize: 14 }}>Loading ProResume…</p>
@@ -45,8 +49,11 @@ function AppRoutes() {
         <Route path="/resume/new"        element={<ProtectedRoute><ResumeEditorPage /></ProtectedRoute>} />
         <Route path="/resume/:id"        element={<ProtectedRoute><ResumeEditorPage /></ProtectedRoute>} />
         <Route path="/resume/view/:id"   element={<PublicResumePage />} />
+        <Route path="/p/:id"             element={<PublicResumePage />} />
+        <Route path="/privacy"           element={<PrivacyPolicyPage />} />
+        <Route path="/terms"             element={<TermsPage />} />
         <Route path="/admin"             element={<AdminDashboardPage />} />
-        <Route path="*"                  element={<Navigate to="/" replace />} />
+        <Route path="*"                  element={<NotFoundPage />} />
       </Routes>
     </Suspense>
   )
@@ -57,6 +64,7 @@ export default function App() {
     <AuthProvider>
       <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
         <AppRoutes />
+        <CookieConsent />
         <Toaster
           position="top-right"
           gutter={8}

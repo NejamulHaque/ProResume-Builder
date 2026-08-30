@@ -1,0 +1,14 @@
+# ProResume Builder — Robots.txt
+# Creator: Nejamul Haque (https://github.com/NejamulHaque/ProResume-Builder)
+
+User-agent: *
+Allow: /
+Allow: /privacy
+Allow: /terms
+Allow: /faq
+Allow: /p/
+Disallow: /admin
+Disallow: /api/admin
+Disallow: /resume/*/edit
+
+Sitemap: https://nejamulhaque.github.io/ProResume-Builder/sitemap.xml

@@ -2,8 +2,8 @@ import { useAuth } from '../../hooks/useAuth.jsx'
 import { Link } from 'react-router-dom'
 
 const NAV_ITEMS = [
-  { id: 'resumes',   icon: '📄', label: 'My Resumes'  },
-  { id: 'templates', icon: '🎨', label: 'Templates'   },
+  { id: 'resumes', label: 'My Resumes'  },
+  { id: 'templates', label: 'Templates'   },
   { id: 'developer', icon: '👨‍💻', label: 'Developer'   },
 ]
 

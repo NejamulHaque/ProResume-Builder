@@ -3,36 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="alternate icon" type="image/png" href="/app-icon-512.svg" />
+    <link rel="apple-touch-icon" href="/app-icon-512.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
 
-    <!-- SEO -->
-    <title>ProResume Builder — Free Professional Resume Builder</title>
-    <meta name="description" content="Build ATS-friendly professional resumes in minutes. 5 beautiful templates, AI-powered bullet improvements, PDF export. Free forever." />
-    <meta name="keywords" content="resume builder, free resume, ATS resume, CV builder, professional resume" />
-    <link rel="canonical" href="https://proresume-six.vercel.app" />
+    <!-- Primary Meta Tags -->
+    <title>ProResume Builder — Overleaf LaTeX & AI-Powered ATS Resume Suite</title>
+    <meta name="title" content="ProResume Builder — Overleaf LaTeX & AI-Powered ATS Resume Suite" />
+    <meta name="description" content="Build FAANG-grade, ATS-optimized resumes with real-time Overleaf LaTeX compilation, IRUS AI bullet enhancements, 5 modern templates, and ephemeral 10-day privacy auto-delete. 100% Free & Open Source by Nejamul Haque." />
+    <meta name="keywords" content="resume builder, overleaf latex resume, free resume maker, ATS resume optimizer, CV builder, IRUS AI, DevSecOps resume, latex editor, vector pdf resume, Nejamul Haque" />
+    <meta name="author" content="Nejamul Haque" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://github.com/NejamulHaque/ProResume-Builder" />
 
-    <!-- Open Graph -->
-    <meta property="og:type"        content="website" />
-    <meta property="og:title"       content="ProResume Builder — Free Professional Resume Builder" />
-    <meta property="og:description" content="Build ATS-friendly resumes in minutes. 5 templates, AI improvements, PDF export." />
-    <meta property="og:image"       content="/og-image.png" />
-    <meta property="og:url"         content="https://proresume-six.vercel.app" />
-    <meta property="og:site_name"   content="ProResume" />
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://github.com/NejamulHaque/ProResume-Builder" />
+    <meta property="og:title" content="ProResume Builder — Overleaf LaTeX & AI Resume Suite" />
+    <meta property="og:description" content="Create recruiter-grade, ATS-compliant resumes with real-time Overleaf LaTeX editing, IRUS AI generation, and instant vector PDF export." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:alt" content="ProResume Builder - Live LaTeX & AI Resume Preview" />
+    <meta property="og:site_name" content="ProResume Builder" />
 
     <!-- Twitter Card -->
-    <meta name="twitter:card"        content="summary_large_image" />
-    <meta name="twitter:title"       content="ProResume Builder" />
-    <meta name="twitter:description" content="Free professional resume builder with AI improvements and ATS scoring." />
-    <meta name="twitter:image"       content="/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:creator" content="@Nejamul_Haque_" />
+    <meta name="twitter:title" content="ProResume Builder — Overleaf LaTeX & AI Resume Suite" />
+    <meta name="twitter:description" content="Create recruiter-grade, ATS-compliant resumes with real-time Overleaf LaTeX editing and IRUS AI." />
+    <meta name="twitter:image" content="/og-image.png" />
 
-    <!-- Theme -->
+    <!-- Theme & PWA -->
     <meta name="theme-color" content="#7c6fff" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Structured JSON-LD Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "ProResume Builder",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Nejamul Haque",
+        "url": "https://nejamulhaque.vercel.app/"
+      },
+      "description": "Privacy-first professional resume builder with Overleaf LaTeX compilation, IRUS AI bullet enhancements, and 10-day ephemeral cloud retention."
+    }
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root"></div>
