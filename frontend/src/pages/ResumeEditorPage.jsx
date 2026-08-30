@@ -66,185 +66,258 @@ function EditorMobileTabs({ activeTab, onChange }) {
   )
 }
 
-// ─── Professional Top Bar ──────────────────────────
-function EditorBar({ title, template, onTitleChange, onTemplateChange, onSave, saving,
-                     onTogglePreview, previewVisible, resumeId, isPublic, onVisibilityToggle,
-                     isMobile, onLogout, onSelectPreset, onShowNotice, resumeData, onApplySummary,
-                     onExportJSON, onImportJSON, zoom, setZoom, onOpenCoverLetter,
-                     editorMode, onToggleEditorMode, onExportTex, onToggleAts, atsScore, onOpenSecurityScanner }) {
+// ─── Professional Top Bar (Sleek 3-Zone Architecture) ───
+function EditorBar({
+  title, template, onTitleChange, onTemplateChange, onSave, saving,
+  onTogglePreview, previewVisible, resumeId, isPublic, onVisibilityToggle,
+  isMobile, onLogout, onSelectPreset, onShowNotice, resumeData, onApplySummary,
+  onExportJSON, onImportJSON, zoom, setZoom, onOpenCoverLetter,
+  editorMode, onToggleEditorMode, onExportTex, onToggleAts, atsScore,
+  onOpenSecurityScanner, onOpenTranslator, showQrCode, onToggleQrCode
+}) {
+  const [toolsOpen, setToolsOpen] = useState(false)
+  const [aiMenuOpen, setAiMenuOpen] = useState(false)
+  const toolsRef = useRef(null)
+  const aiRef = useRef(null)
+
+  // Close dropdowns on click outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (toolsRef.current && !toolsRef.current.contains(e.target)) setToolsOpen(false)
+      if (aiRef.current && !aiRef.current.contains(e.target)) setAiMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
+
   return (
     <div style={{
-      height: 58, background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '0 14px', flexShrink: 0, gap: 10, zIndex: 10, overflowX: 'auto',
+      height: 60, background: 'rgba(15, 15, 24, 0.95)', backdropFilter: 'blur(16px)',
+      borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center',
+      justifyContent: 'space-between', padding: '0 18px', flexShrink: 0, gap: 14, zIndex: 100,
     }}>
-      {/* Left: Breadcrumbs & Title & Presets */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-        <button onClick={() => window.history.back()}
-          className="btn btn-ghost btn-sm" style={{ padding: '5px 8px' }} title="Back to Dashboard">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      
+      {/* ── ZONE 1: Context & Title ────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0, minWidth: 0 }}>
+        <button
+          onClick={() => window.history.back()}
+          className="btn btn-ghost btn-xs"
+          style={{ padding: '6px 8px', color: 'var(--text-secondary)' }}
+          title="Back to Dashboard"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <polyline points="15 18 9 12 15 6"/>
           </svg>
-          {!isMobile && 'Dashboard'}
+          <span className="desktop-only" style={{ fontSize: 12.5, fontWeight: 600 }}>Dashboard</span>
         </button>
 
-        {!isMobile && <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>/</span>}
+        <span className="desktop-only" style={{ color: 'var(--border-light)', fontSize: 14 }}>/</span>
 
         <input
-          value={title} onChange={e => onTitleChange(e.target.value)}
+          value={title}
+          onChange={e => onTitleChange(e.target.value)}
           className="editor-bar-title"
           style={{
-            background: 'var(--bg-elevated)', border: '1px solid var(--border)', outline: 'none',
-            color: 'var(--text-primary)', fontSize: isMobile ? 12.5 : 13.5,
-            fontWeight: 600, fontFamily: 'var(--font-display)',
-            width: isMobile ? 95 : 135, minWidth: 0,
-            borderRadius: 7, padding: '4px 8px', transition: 'border-color 0.15s',
+            background: 'var(--bg-card)', border: '1px solid var(--border)', outline: 'none',
+            color: 'var(--text-primary)', fontSize: 13, fontWeight: 700,
+            fontFamily: 'var(--font-display)', width: isMobile ? 110 : 160, minWidth: 0,
+            borderRadius: 8, padding: '5px 10px', transition: 'border-color 0.15s',
           }}
           placeholder="Resume title…"
+          title="Click to rename resume"
         />
 
-        {!isMobile && <SampleDataPicker onSelectPreset={onSelectPreset} />}
+        {/* Auto-delete / TTL info pill */}
+        <button
+          onClick={onShowNotice}
+          className="btn btn-ghost btn-xs"
+          style={{
+            padding: '3px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600,
+            background: 'rgba(255, 179, 71, 0.12)', color: 'var(--warning)',
+            border: '1px solid rgba(255, 179, 71, 0.25)'
+          }}
+          title="10-Day Ephemeral Retention Rule"
+        >
+          ⏳ 10d
+        </button>
       </div>
 
-      {/* Center: Overleaf vs Visual Mode Segmented Control */}
+      {/* ── ZONE 2: Studio Mode & Intelligence ─────── */}
       {!isMobile && (
-        <div style={{
-          display: 'flex', background: 'var(--bg-elevated)',
-          border: '1px solid var(--border)', borderRadius: 8, padding: 3, gap: 2,
-          flexShrink: 0
-        }}>
-          <button
-            onClick={() => onToggleEditorMode('form')}
-            style={{
-              background: editorMode === 'form' ? 'var(--accent)' : 'transparent',
-              color: editorMode === 'form' ? '#fff' : 'var(--text-secondary)',
-              border: 'none', borderRadius: 6, padding: '4px 11px', fontSize: 12, fontWeight: 600,
-              cursor: 'pointer', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 5
-            }}
-          >
-            <span>✏️</span> Visual Form
-          </button>
-          <button
-            onClick={() => onToggleEditorMode('latex')}
-            style={{
-              background: editorMode === 'latex' ? '#10b981' : 'transparent',
-              color: editorMode === 'latex' ? '#fff' : 'var(--text-secondary)',
-              border: 'none', borderRadius: 6, padding: '4px 11px', fontSize: 12, fontWeight: 600,
-              cursor: 'pointer', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 5
-            }}
-          >
-            <span>⌨️</span> Overleaf LaTeX
-          </button>
-        </div>
-      )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+          
+          {/* Segmented Mode Switcher */}
+          <div style={{
+            display: 'flex', background: 'var(--bg-primary)',
+            border: '1px solid var(--border)', borderRadius: 10, padding: 3, gap: 2
+          }}>
+            <button
+              onClick={() => onToggleEditorMode('form')}
+              style={{
+                background: editorMode === 'form' ? 'var(--accent)' : 'transparent',
+                color: editorMode === 'form' ? '#fff' : 'var(--text-muted)',
+                border: 'none', borderRadius: 7, padding: '5px 12px', fontSize: 12, fontWeight: 700,
+                cursor: 'pointer', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 6
+              }}
+            >
+              <span>✏️</span> Visual Form
+            </button>
+            <button
+              onClick={() => onToggleEditorMode('latex')}
+              style={{
+                background: editorMode === 'latex' ? '#10b981' : 'transparent',
+                color: editorMode === 'latex' ? '#fff' : 'var(--text-muted)',
+                border: 'none', borderRadius: 7, padding: '5px 12px', fontSize: 12, fontWeight: 700,
+                cursor: 'pointer', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 6
+              }}
+            >
+              <span>⌨️</span> Overleaf LaTeX
+            </button>
+          </div>
 
-      {/* Right Actions */}
-      <div className="editor-bar-actions" style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
-        
-        {/* IRUS AI Trigger */}
-        {!isMobile && <IRUSAssistant resumeData={resumeData} onApplySummary={onApplySummary} />}
+          {/* IRUS AI Assistant Trigger */}
+          <IRUSAssistant resumeData={resumeData} onApplySummary={onApplySummary} />
 
-        {/* Security Audit Scanner Button */}
-        {!isMobile && (
+          {/* DevSecOps Security Audit */}
           <button
             onClick={onOpenSecurityScanner}
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-xs"
             style={{
-              background: 'rgba(61,224,160,0.10)',
-              color: 'var(--success)',
-              border: '1px solid rgba(61,224,160,0.25)',
-              fontSize: 11.5, fontWeight: 700, borderRadius: 8, padding: '4px 9px', flexShrink: 0
+              background: 'rgba(61,224,160,0.1)', color: 'var(--success)',
+              border: '1px solid rgba(61,224,160,0.3)', padding: '5px 10px',
+              borderRadius: 8, fontSize: 12, fontWeight: 700
             }}
-            title="DevSecOps Resume Security & Secret Leak Audit"
+            title="Run DevSecOps Security & Secret Leak Scanner"
           >
-            🛡️ Security
+            🛡️ Audit
           </button>
-        )}
 
-        {/* ATS Score Badge */}
-        {!isMobile && (
+          {/* ATS Score Indicator */}
           <button
             onClick={onToggleAts}
-            className="btn btn-ghost btn-sm"
+            className="btn btn-ghost btn-xs"
             style={{
               background: atsScore >= 80 ? 'rgba(61,224,160,0.12)' : 'rgba(255,107,157,0.12)',
               color: atsScore >= 80 ? 'var(--success)' : 'var(--accent-2)',
               border: `1px solid ${atsScore >= 80 ? 'rgba(61,224,160,0.3)' : 'rgba(255,107,157,0.3)'}`,
-              fontSize: 11.5, fontWeight: 700, borderRadius: 8, padding: '4px 9px', flexShrink: 0
+              padding: '5px 10px', borderRadius: 8, fontSize: 12, fontWeight: 700
             }}
-            title="Click to view ATS Score breakdown"
+            title="ATS Match Readiness Score"
           >
             🎯 {atsScore}% ATS
           </button>
-        )}
 
-        {/* Cover letter generator */}
-        {!isMobile && (
-          <button
-            onClick={onOpenCoverLetter}
-            className="btn btn-secondary btn-sm"
-            style={{ fontWeight: 600, padding: '5px 9px', fontSize: 12, flexShrink: 0 }}
-            title="Generate Cover Letter with IRUS AI"
-          >
-            ✉️ Cover Letter
-          </button>
-        )}
+        </div>
+      )}
 
-        {/* 10-day TTL notice badge */}
-        <button
-          onClick={onShowNotice}
-          className="btn btn-ghost btn-sm"
-          style={{ color: 'var(--warning)', padding: '5px 8px', fontSize: 12, flexShrink: 0 }}
-          title="10-Day Retention Notice"
-        >
-          ⏳ 10d
-        </button>
-
+      {/* ── ZONE 3: Actions & Export ────────────────── */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        
         {/* Template selector */}
         {!isMobile && (
-          <select value={template} onChange={e => onTemplateChange(e.target.value)}
+          <select
+            value={template}
+            onChange={e => onTemplateChange(e.target.value)}
             className="editor-bar-template"
             style={{
-              background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-              color: 'var(--text-primary)', padding: '5px 8px', borderRadius: 7,
-              fontSize: 12, fontFamily: 'var(--font-body)', cursor: 'pointer', flexShrink: 0
-            }}>
-            <option value="modern">Modern</option>
-            <option value="minimal">Minimal</option>
-            <option value="executive">Executive</option>
-            <option value="technical">Technical</option>
-            <option value="creative">Creative</option>
+              background: 'var(--bg-card)', border: '1px solid var(--border)',
+              color: 'var(--text-primary)', padding: '6px 10px', borderRadius: 8,
+              fontSize: 12, fontWeight: 600, fontFamily: 'var(--font-body)', cursor: 'pointer'
+            }}
+          >
+            <option value="modern">🎨 Modern</option>
+            <option value="minimal">🖋️ Minimal</option>
+            <option value="executive">👑 Executive</option>
+            <option value="technical">💻 Technical</option>
+            <option value="creative">✨ Creative</option>
           </select>
         )}
 
+        {/* Tools Menu Dropdown (Presets, Cover Letter, Translator, Backup) */}
+        <div ref={toolsRef} style={{ position: 'relative' }}>
+          <button
+            onClick={() => setToolsOpen(!toolsOpen)}
+            className="btn btn-secondary btn-xs"
+            style={{ padding: '6px 10px', fontSize: 12, fontWeight: 600, borderRadius: 8 }}
+            title="More Resume Tools & Presets"
+          >
+            ⚙️ Tools ▾
+          </button>
+
+          {toolsOpen && (
+            <div style={{
+              position: 'absolute', top: '100%', right: 0, marginTop: 6,
+              background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+              borderRadius: 12, padding: 8, width: 220, zIndex: 200,
+              boxShadow: '0 16px 40px rgba(0,0,0,0.7)', animation: 'slideUp 0.15s ease',
+              display: 'flex', flexDirection: 'column', gap: 4
+            }}>
+              <button
+                onClick={() => { setToolsOpen(false); onOpenCoverLetter(); }}
+                className="btn btn-ghost btn-xs"
+                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
+              >
+                ✉️ Cover Letter Generator
+              </button>
+              <button
+                onClick={() => { setToolsOpen(false); onOpenTranslator(); }}
+                className="btn btn-ghost btn-xs"
+                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
+              >
+                🌍 Multi-Language Translation
+              </button>
+              <button
+                onClick={() => { setToolsOpen(false); onToggleQrCode(); }}
+                className="btn btn-ghost btn-xs"
+                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
+              >
+                📱 Toggle Header QR Code {showQrCode ? '(ON)' : '(OFF)'}
+              </button>
+              <button
+                onClick={() => { setToolsOpen(false); onExportTex(); }}
+                className="btn btn-ghost btn-xs"
+                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
+              >
+                📄 Export Overleaf .tex
+              </button>
+              <button
+                onClick={() => { setToolsOpen(false); onExportJSON(); }}
+                className="btn btn-ghost btn-xs"
+                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
+              >
+                📦 Export JSON Backup
+              </button>
+              <div style={{ borderTop: '1px solid var(--border)', margin: '4px 0' }} />
+              <div style={{ padding: '4px 10px' }}>
+                <SampleDataPicker onSelectPreset={(p) => { setToolsOpen(false); onSelectPreset(p); }} />
+              </div>
+            </div>
+          )}
+        </div>
+
         <ShareResumeButton resumeId={resumeId} isPublic={isPublic} onToggle={onVisibilityToggle} />
 
-        {/* Export TeX Source */}
-        {!isMobile && (
-          <button onClick={onExportTex} className="btn btn-secondary btn-sm" style={{ padding: '5px 8px', fontSize: 12, flexShrink: 0 }} title="Export Overleaf LaTeX (.tex) source">
-            📄 .tex
-          </button>
-        )}
-
-        {!isMobile && (
-          <button onClick={onTogglePreview} className={`btn btn-sm ${previewVisible ? 'btn-primary' : 'btn-secondary'}`} style={{ padding: '5px 9px', fontSize: 12, flexShrink: 0 }}>
-            Preview
-          </button>
-        )}
-
+        {/* Primary Export Button */}
         <ExportButton title={title} />
 
-        <button onClick={onSave} disabled={saving} className="btn btn-primary btn-sm" style={{ padding: '5px 12px', fontSize: 12, flexShrink: 0 }}>
-          {saving
-            ? <><div className="spinner sm" /> Saving…</>
-            : 'Save'
-          }
+        {/* Save Button */}
+        <button
+          onClick={onSave}
+          disabled={saving}
+          className="btn btn-primary btn-xs"
+          style={{ padding: '6px 14px', fontSize: 12, fontWeight: 700, borderRadius: 8 }}
+        >
+          {saving ? <div className="spinner sm" /> : 'Save'}
         </button>
 
-        <div style={{ width: 1, height: 18, background: 'var(--border)', margin: '0 2px' }} />
-
-        <button onClick={onLogout} className="btn btn-ghost btn-sm" title="Logout" style={{ color: 'var(--danger)', padding: '5px' }}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        {/* Logout */}
+        <button
+          onClick={onLogout}
+          className="btn btn-ghost btn-xs"
+          title="Sign out"
+          style={{ color: 'var(--danger)', padding: '6px' }}
+        >
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
           </svg>
         </button>
@@ -557,6 +630,9 @@ export default function ResumeEditorPage() {
         onToggleAts={() => setShowAtsDrawer(!showAtsDrawer)}
         atsScore={atsScore}
         onOpenSecurityScanner={() => setShowSecurityScanner(true)}
+        onOpenTranslator={() => setShowTranslator(true)}
+        showQrCode={showQrCode}
+        onToggleQrCode={() => setShowQrCode(!showQrCode)}
       />
 
       {/* Mobile tabs */}
