@@ -1,6 +1,6 @@
 import { supabase } from './supabase.js'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001' + 'https://proresume-six.vercel.app'
 
 /**
  * Authenticated fetch against the Express backend.

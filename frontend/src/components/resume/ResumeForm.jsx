@@ -234,13 +234,28 @@ function SkillsSection({ data, onChange }) {
   )
 }
 
+import GithubProjectImporter from './GithubProjectImporter.jsx'
+
 function ProjectsSection({ data, onChange }) {
   const upd = (id, f, v) => onChange({ ...data, projects: data.projects.map(p => p.id===id ? { ...p, [f]: v } : p) })
   const add = () => onChange({ ...data, projects: [...data.projects, { id: genId(), name: '', description: '', tech: [], url: '' }] })
   const rem = (id) => onChange({ ...data, projects: data.projects.filter(p => p.id!==id) })
+  const handleImportGithub = (newProjects) => {
+    onChange({ ...data, projects: [...(data.projects || []), ...newProjects] })
+  }
+
+  const githubUser = (data.personal?.github || '').replace(/^https?:\/\/github\.com\//i, '').replace(/\/$/, '') || 'NejamulHaque'
+
   return (
     <div>
       <SectionHeader title="Projects" onAdd={add} addLabel="Add Project" />
+      
+      {/* 1-Click GitHub Repository Importer */}
+      <GithubProjectImporter
+        currentUsername={githubUser}
+        onImportProjects={handleImportGithub}
+      />
+
       {data.projects.length === 0 && <p style={{ color: 'var(--text-muted)', fontSize: 13, textAlign: 'center', padding: '20px 0' }}>No projects yet.</p>}
       {data.projects.map(proj => (
         <Entry key={proj.id} title={proj.name||'New Project'} subtitle={proj.url} onDelete={() => rem(proj.id)}>

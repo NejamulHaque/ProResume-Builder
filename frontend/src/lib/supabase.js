@@ -14,8 +14,7 @@ export const isLiveSupabase = Boolean(isValidHttpUrl && import.meta.env.VITE_SUP
 
 if (!isLiveSupabase) {
   console.info(
-    'ℹ️ [Supabase] Running in local/offline client mode with local database storage & Neon backend. ' +
-    'To connect live cloud Supabase, add a valid https:// VITE_SUPABASE_URL to frontend/.env.local.'
+    '[Supabase] Running in local/offline client mode with local database storage & Neon backend. '
   )
 }
 

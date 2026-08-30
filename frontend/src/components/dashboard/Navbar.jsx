@@ -124,7 +124,7 @@ export default function Navbar() {
                 className="btn btn-ghost btn-sm"
                 style={{ width: '100%', justifyContent: 'flex-start', borderRadius: 8, color: 'var(--text-primary)', textDecoration: 'none' }}
               >
-                🏠 Home / Landing Page
+                Home
               </Link>
 
               {isAdmin && (

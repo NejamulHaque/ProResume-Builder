@@ -1,8 +1,3 @@
-/**
- * latexConverter.js — Professional Overleaf LaTeX Engine & Bi-Directional Parser.
- * Generates industry-standard FAANG/Jake's Resume, ModernCV, and Academic LaTeX formats.
- */
-
 // ─── Escape LaTeX Special Characters ───────────────────────────────────────
 export function escapeLatex(str) {
   if (!str) return ''

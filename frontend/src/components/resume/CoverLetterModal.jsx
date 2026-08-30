@@ -11,7 +11,7 @@ export default function CoverLetterModal({ isOpen, onClose, resumeData }) {
   const [copied,        setCopied]        = useState(false)
 
   const candidateName = resumeData.personal?.fullName || 'Nejamul Haque'
-  const email = resumeData.personal?.email || 'you@example.com'
+  const email = resumeData.personal?.email || 'nejamulhaque.works@gmail.com'
   const phone = resumeData.personal?.phone || ''
   const location = resumeData.personal?.location || ''
   const skills = [

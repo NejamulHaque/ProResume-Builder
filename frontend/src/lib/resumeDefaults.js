@@ -28,8 +28,8 @@ export const SAMPLE_RESUME_DATA = {
   personal: {
     fullName:  'NEJAMUL HAQUE',
     title:     'Computer Science Undergraduate | DevSecOps Aspirant',
-    email:     'nejamulhaqueruhaan86@gmail.com',
-    phone:     '+91-6299676007',
+    email:     'nejamulhaque.works@gmail.com',
+    phone:     '+91-620-123-4567',
     location:  'Bettiah, Bihar, India',
     website:   'https://nejamulhaque.vercel.app/',
     linkedin:  'https://www.linkedin.com/in/nejamulhaque/',

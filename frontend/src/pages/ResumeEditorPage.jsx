@@ -17,6 +17,7 @@ import SampleDataPicker from '../components/resume/SampleDataPicker.jsx'
 import IRUSAssistant from '../components/resume/IRUSAssistant.jsx'
 import CoverLetterModal from '../components/resume/CoverLetterModal.jsx'
 import LatexEditor from '../components/resume/LatexEditor.jsx'
+import SecurityScannerModal from '../components/resume/SecurityScannerModal.jsx'
 
 const ACCENT_PALETTES = [
   { id: 'indigo',  name: 'Indigo',  color: '#7c6fff' },
@@ -69,7 +70,7 @@ function EditorBar({ title, template, onTitleChange, onTemplateChange, onSave, s
                      onTogglePreview, previewVisible, resumeId, isPublic, onVisibilityToggle,
                      isMobile, onLogout, onSelectPreset, onShowNotice, resumeData, onApplySummary,
                      onExportJSON, onImportJSON, zoom, setZoom, onOpenCoverLetter,
-                     editorMode, onToggleEditorMode, onExportTex, onToggleAts, atsScore }) {
+                     editorMode, onToggleEditorMode, onExportTex, onToggleAts, atsScore, onOpenSecurityScanner }) {
   return (
     <div style={{
       height: 58, background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)',
@@ -141,6 +142,23 @@ function EditorBar({ title, template, onTitleChange, onTemplateChange, onSave, s
         
         {/* IRUS AI Trigger */}
         {!isMobile && <IRUSAssistant resumeData={resumeData} onApplySummary={onApplySummary} />}
+
+        {/* Security Audit Scanner Button */}
+        {!isMobile && (
+          <button
+            onClick={onOpenSecurityScanner}
+            className="btn btn-ghost btn-sm"
+            style={{
+              background: 'rgba(61,224,160,0.10)',
+              color: 'var(--success)',
+              border: '1px solid rgba(61,224,160,0.25)',
+              fontSize: 11.5, fontWeight: 700, borderRadius: 8, padding: '4px 9px', flexShrink: 0
+            }}
+            title="DevSecOps Resume Security & Secret Leak Audit"
+          >
+            🛡️ Security
+          </button>
+        )}
 
         {/* ATS Score Badge */}
         {!isMobile && (
@@ -240,13 +258,13 @@ export default function ResumeEditorPage() {
   const location   = useLocation()
   const { user, logout }   = useAuth()
 
-  const [title,          setTitle]          = useState('Nejamul Haque - Resume')
+  const [title,          setTitle]          = useState('NEJAMUL HAQUE - Resume')
   const [template,       setTemplate]       = useState(location.state?.template || 'modern')
   const [accentColor,    setAccentColor]    = useState('#7c6fff')
   const [customFont,     setCustomFont]     = useState('"Segoe UI",system-ui,sans-serif')
   const [editorMode,     setEditorMode]     = useState('form') // 'form' | 'latex'
   
-  // Default to rich starter profile (Nejamul Haque)
+  // Default to official resume (Nejamul Haque)
   const [data,           setData]           = useState(SAMPLE_RESUME_DATA)
   const [latexCode,      setLatexCode]      = useState(() => resumeToLatex(SAMPLE_RESUME_DATA))
   
@@ -259,6 +277,7 @@ export default function ResumeEditorPage() {
   const [isMobile,       setIsMobile]       = useState(() => window.innerWidth < 900)
   const [show10DayNotice, setShow10DayNotice] = useState(false)
   const [showCoverLetter, setShowCoverLetter] = useState(false)
+  const [showSecurityScanner, setShowSecurityScanner] = useState(false)
   const [showAtsDrawer,   setShowAtsDrawer]   = useState(false)
   const [zoom,           setZoom]           = useState(0.82)
 
@@ -481,6 +500,14 @@ export default function ResumeEditorPage() {
         resumeData={data}
       />
 
+      {/* DevSecOps Security & Leak Scanner Modal */}
+      <SecurityScannerModal
+        isOpen={showSecurityScanner}
+        onClose={() => setShowSecurityScanner(false)}
+        resumeData={data}
+        latexCode={latexCode}
+      />
+
       {/* Sticky 10-day retention warning bar */}
       <AutoDeleteBanner
         createdAt={createdAt}
@@ -518,6 +545,7 @@ export default function ResumeEditorPage() {
         onExportTex={handleExportTex}
         onToggleAts={() => setShowAtsDrawer(!showAtsDrawer)}
         atsScore={atsScore}
+        onOpenSecurityScanner={() => setShowSecurityScanner(true)}
       />
 
       {/* Mobile tabs */}

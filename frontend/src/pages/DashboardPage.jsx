@@ -112,7 +112,7 @@ export default function DashboardPage() {
                   fontSize: 11.5, fontWeight: 700, padding: '3px 9px', borderRadius: 100,
                   background: 'rgba(255,179,71,0.15)', color: 'var(--warning)', border: '1px solid rgba(255,179,71,0.3)'
                 }}>
-                  Neon DB Protected
+                  Protected with Security
                 </span>
               </div>
 

@@ -168,7 +168,7 @@ export default function LandingPage() {
                 Sign In
               </Link>
               <Link to="/auth" className="btn btn-primary btn-md" style={{ padding: '8px 18px', textDecoration: 'none' }}>
-                Start Free 🚀
+                Start Free
               </Link>
             </>
           )}
@@ -197,7 +197,7 @@ export default function LandingPage() {
               background: 'rgba(124,111,255,0.12)', border: '1px solid rgba(124,111,255,0.28)',
               fontSize: 13, fontWeight: 600, color: 'var(--accent)', marginBottom: 20
             }}>
-              <span>🤖 Powered by IRUS AI &amp; Neon DB</span>
+              <span>🤖 Powered by IRUS AI</span>
               <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'currentColor' }} />
               <span style={{ color: 'var(--text-muted)' }}>10-Day Zero-Leak Privacy</span>
             </div>
@@ -560,29 +560,55 @@ export default function LandingPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32 }}>
               {/* Direct Reach-Out Info */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 22 }}>
-                  <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 6 }}>Nejamul Haque</h3>
-                  <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.5, marginBottom: 16 }}>
-                    Full-Stack Engineer &amp; Creator of ProResume &amp; IRUS AI.
+                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 24 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                    <div style={{
+                      width: 44, height: 44, borderRadius: 12,
+                      background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 18, fontWeight: 800, color: '#fff'
+                    }}>
+                      NH
+                    </div>
+                    <div>
+                      <h3 style={{ fontSize: 16.5, fontWeight: 800, margin: 0 }}>NEJAMUL HAQUE</h3>
+                      <p style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, margin: 0 }}>
+                        Computer Science Undergraduate | DevSecOps Aspirant
+                      </p>
+                    </div>
+                  </div>
+
+                  <p style={{ fontSize: 12.5, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 16 }}>
+                    Specializing in backend architecture, Linux system administration, network security, and infrastructure automation. Creator of ProResume Builder &amp; IRUS AI.
                   </p>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 13 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 12.5 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                       <span>📧</span>
-                      <a href="mailto:nejamulhaque.works@gmail.com" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
-                        nejamulhaque.works@gmail.com
+                      <a href="mailto:nejamulhaqueruhaan86@gmail.com" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                        nejamulhaqueruhaan86@gmail.com
                       </a>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span>🤖</span>
-                      <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-2)', textDecoration: 'none', fontWeight: 600 }}>
-                        irus-ai.onrender.com
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                      <span>📱</span>
+                      <span style={{ color: 'var(--text-secondary)' }}>+91-6299676007 (Bettiah, Bihar, India)</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                      <span>🌐</span>
+                      <a href="https://nejamulhaque.vercel.app/" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                        nejamulhaque.vercel.app
                       </a>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                      <span>💻</span>
-                      <a href="https://github.com/nejamul05" target="_blank" rel="noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>
-                        github.com/nejamul05
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                      <span>🐙</span>
+                      <a href="https://github.com/NejamulHaque" target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', fontWeight: 600 }}>
+                        github.com/NejamulHaque
+                      </a>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                      <span>💼</span>
+                      <a href="https://www.linkedin.com/in/nejamulhaque/" target="_blank" rel="noreferrer" style={{ color: '#0A66C2', textDecoration: 'none', fontWeight: 600 }}>
+                        linkedin.com/in/nejamulhaque
                       </a>
                     </div>
                   </div>
