@@ -18,6 +18,7 @@ import IRUSAssistant from '../components/resume/IRUSAssistant.jsx'
 import CoverLetterModal from '../components/resume/CoverLetterModal.jsx'
 import LatexEditor from '../components/resume/LatexEditor.jsx'
 import SecurityScannerModal from '../components/resume/SecurityScannerModal.jsx'
+import ResumeTranslatorModal from '../components/resume/ResumeTranslatorModal.jsx'
 
 const ACCENT_PALETTES = [
   { id: 'indigo',  name: 'Indigo',  color: '#7c6fff' },
@@ -278,6 +279,8 @@ export default function ResumeEditorPage() {
   const [show10DayNotice, setShow10DayNotice] = useState(false)
   const [showCoverLetter, setShowCoverLetter] = useState(false)
   const [showSecurityScanner, setShowSecurityScanner] = useState(false)
+  const [showTranslator,  setShowTranslator]   = useState(false)
+  const [showQrCode,      setShowQrCode]       = useState(false)
   const [showAtsDrawer,   setShowAtsDrawer]   = useState(false)
   const [zoom,           setZoom]           = useState(0.82)
 
@@ -508,6 +511,14 @@ export default function ResumeEditorPage() {
         latexCode={latexCode}
       />
 
+      {/* Multi-Language Translator Modal */}
+      <ResumeTranslatorModal
+        isOpen={showTranslator}
+        onClose={() => setShowTranslator(false)}
+        resumeData={data}
+        onApplyLocale={handleDataChange}
+      />
+
       {/* Sticky 10-day retention warning bar */}
       <AutoDeleteBanner
         createdAt={createdAt}
@@ -622,7 +633,7 @@ export default function ResumeEditorPage() {
               background: 'rgba(13, 17, 23, 0.94)', backdropFilter: 'blur(16px)',
               border: '1px solid var(--border)', borderRadius: 14,
               padding: '8px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              gap: 14, marginBottom: 18, boxShadow: 'var(--shadow-lg)', flexWrap: 'wrap'
+              gap: 12, marginBottom: 18, boxShadow: 'var(--shadow-lg)', flexWrap: 'wrap'
             }}>
               
               {/* Color Palette Switcher */}
@@ -661,6 +672,36 @@ export default function ResumeEditorPage() {
                     <option key={f.id} value={f.font}>{f.name}</option>
                   ))}
                 </select>
+              </div>
+
+              {/* QR Code & Translation Toggles */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <button
+                  onClick={() => setShowQrCode(!showQrCode)}
+                  className="btn btn-ghost btn-xs"
+                  style={{
+                    padding: '3px 8px', fontSize: 11.5,
+                    background: showQrCode ? 'rgba(124,111,255,0.2)' : 'transparent',
+                    color: showQrCode ? 'var(--accent)' : 'var(--text-secondary)',
+                    border: '1px solid var(--border)', borderRadius: 6
+                  }}
+                  title="Toggle Portfolio QR Code on Resume Header"
+                >
+                  📱 QR Code {showQrCode ? 'ON' : 'OFF'}
+                </button>
+
+                <button
+                  onClick={() => setShowTranslator(true)}
+                  className="btn btn-ghost btn-xs"
+                  style={{
+                    padding: '3px 8px', fontSize: 11.5,
+                    color: 'var(--text-secondary)',
+                    border: '1px solid var(--border)', borderRadius: 6
+                  }}
+                  title="Multi-Language Resume Localizer"
+                >
+                  🌍 Translate
+                </button>
               </div>
 
               {/* Zoom Controls */}
@@ -707,6 +748,7 @@ export default function ResumeEditorPage() {
                 scale={zoom}
                 accentColor={accentColor}
                 customFont={customFont}
+                showQrCode={showQrCode}
               />
             </div>
 
@@ -737,6 +779,7 @@ export default function ResumeEditorPage() {
         template={template}
         accentColor={accentColor}
         customFont={customFont}
+        showQrCode={showQrCode}
       />
     </div>
   )

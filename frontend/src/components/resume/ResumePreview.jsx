@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { format } from 'date-fns'
+import ResumeQRCode from './ResumeQRCode.jsx'
 
 // ─── Date helpers ──────────────────────────────────────────────────────────
 const fmtDate = (str) => {
@@ -31,23 +32,33 @@ function SecTitle({ title, accent }) {
 // ══════════════════════════════════════════════════════
 // 1. MODERN
 // ══════════════════════════════════════════════════════
-const ModernTemplate = memo(({ data, accentColor, customFont }) => {
+const ModernTemplate = memo(({ data, accentColor, customFont, showQrCode }) => {
   const p   = data.personal
   const acc = accentColor || '#7c6fff'
   const contacts = [p.email, p.phone, p.location, p.website, p.linkedin, p.github].filter(Boolean)
   const font = customFont || '"Segoe UI",system-ui,sans-serif'
+  const qrUrl = p.website || (p.github ? (p.github.startsWith('http') ? p.github : `https://${p.github}`) : '')
 
   return (
     <div style={{ fontFamily: font, background: '#fff', color: '#1a1a2e', width: 800, minHeight: 1050, boxSizing: 'border-box' }}>
       {/* Header */}
-      <div style={{ background: 'linear-gradient(135deg,#1a1a2e 0%,#0f3460 100%)', padding: '34px 40px', position: 'relative', overflow: 'hidden' }}>
+      <div style={{ background: 'linear-gradient(135deg,#1a1a2e 0%,#0f3460 100%)', padding: '34px 40px', position: 'relative', overflow: 'hidden', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ position:'absolute',top:-30,right:-30,width:180,height:180,borderRadius:'50%',background:`${acc}22` }} />
         <div style={{ position:'absolute',bottom:-50,left:'42%',width:150,height:150,borderRadius:'50%',background:`${acc}11` }} />
-        <h1 style={{ fontSize:30,fontWeight:800,color:'#fff',letterSpacing:-0.8,position:'relative',zIndex:1 }}>{p.fullName || 'Your Name'}</h1>
-        {p.title && <p style={{ fontSize:14,color:acc,fontWeight:600,margin:'5px 0 14px',position:'relative',zIndex:1 }}>{p.title}</p>}
-        <div style={{ display:'flex',flexWrap:'wrap',gap:'4px 18px',position:'relative',zIndex:1 }}>
-          {contacts.map((c,i) => <span key={i} style={{ fontSize:11.5,color:'rgba(255,255,255,.65)' }}>{c}</span>)}
+        
+        <div style={{ position:'relative',zIndex:1,flex:1 }}>
+          <h1 style={{ fontSize:30,fontWeight:800,color:'#fff',letterSpacing:-0.8 }}>{p.fullName || 'Your Name'}</h1>
+          {p.title && <p style={{ fontSize:14,color:acc,fontWeight:600,margin:'5px 0 14px' }}>{p.title}</p>}
+          <div style={{ display:'flex',flexWrap:'wrap',gap:'4px 18px' }}>
+            {contacts.map((c,i) => <span key={i} style={{ fontSize:11.5,color:'rgba(255,255,255,.65)' }}>{c}</span>)}
+          </div>
         </div>
+
+        {showQrCode && qrUrl && (
+          <div style={{ position: 'relative', zIndex: 2, marginLeft: 16 }}>
+            <ResumeQRCode url={qrUrl} size={58} />
+          </div>
+        )}
       </div>
 
       {/* Body: two columns */}
@@ -596,7 +607,7 @@ const TEMPLATE_MAP = {
 }
 
 // ─── Main export ───────────────────────────────────────────────────────────
-export default function ResumePreview({ data, template = 'modern', scale = 0.82, accentColor, customFont, style = {} }) {
+export default function ResumePreview({ data, template = 'modern', scale = 0.82, accentColor, customFont, showQrCode = false, style = {} }) {
   const Template = TEMPLATE_MAP[template] || ModernTemplate
   const safeScale = scale || 0.82
 
@@ -613,7 +624,7 @@ export default function ResumePreview({ data, template = 'modern', scale = 0.82,
         ...style,
       }}
     >
-      <Template data={data} accentColor={accentColor} customFont={customFont} />
+      <Template data={data} accentColor={accentColor} customFont={customFont} showQrCode={showQrCode} />
     </div>
   )
 }
@@ -622,7 +633,7 @@ export default function ResumePreview({ data, template = 'modern', scale = 0.82,
  * Separate component for the PDF capture target.
  * We render this ONLY ONCE in the ResumeEditorPage to avoid duplicate ID issues.
  */
-export function ResumePrintTarget({ data, template = 'modern', accentColor, customFont }) {
+export function ResumePrintTarget({ data, template = 'modern', accentColor, customFont, showQrCode = false }) {
   const Template = TEMPLATE_MAP[template] || ModernTemplate
   return (
     <div
@@ -635,7 +646,7 @@ export function ResumePrintTarget({ data, template = 'modern', accentColor, cust
         pointerEvents: 'none',
       }}
     >
-      <Template data={data} accentColor={accentColor} customFont={customFont} />
+      <Template data={data} accentColor={accentColor} customFont={customFont} showQrCode={showQrCode} />
     </div>
   )
 }

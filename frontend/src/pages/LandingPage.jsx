@@ -125,6 +125,8 @@ export default function LandingPage() {
     }, 750)
   }
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)', overflowX: 'hidden' }}>
       
@@ -140,7 +142,7 @@ export default function LandingPage() {
         height: 72, borderBottom: '1px solid var(--border)',
         background: 'rgba(9, 9, 15, 0.92)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
         position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 28px'
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px'
       }}>
         {/* Logo */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
@@ -162,7 +164,7 @@ export default function LandingPage() {
           </span>
         </Link>
 
-        {/* Center Navigation Links (Frozen) */}
+        {/* Center Navigation Links (Desktop) */}
         <nav className="desktop-only" aria-label="Main Navigation" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
           <a href="#templates" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13.5, fontWeight: 500 }}>Templates</a>
           <a href="#latex" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13.5, fontWeight: 500 }}>LaTeX Editor</a>
@@ -188,14 +190,14 @@ export default function LandingPage() {
           {isAdmin && (
             <Link
               to="/admin"
-              className="btn btn-ghost btn-sm"
+              className="btn btn-ghost btn-sm desktop-only"
               style={{
                 fontSize: 12, fontWeight: 700, color: 'var(--accent)',
                 background: 'rgba(124,111,255,0.12)', border: '1px solid rgba(124,111,255,0.3)',
                 padding: '5px 12px', borderRadius: 8, textDecoration: 'none'
               }}
             >
-              🛡️ Admin Console
+              🛡️ Admin
             </Link>
           )}
 
@@ -205,7 +207,7 @@ export default function LandingPage() {
             </Link>
           ) : (
             <>
-              <Link to="/auth" className="btn btn-ghost btn-sm" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>
+              <Link to="/auth" className="btn btn-ghost btn-sm desktop-only" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>
                 Sign In
               </Link>
               <Link to="/auth" className="btn btn-primary btn-md" style={{ padding: '8px 18px', textDecoration: 'none', fontWeight: 700 }}>
@@ -213,8 +215,64 @@ export default function LandingPage() {
               </Link>
             </>
           )}
+
+          {/* Mobile Menu Hamburger Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="btn btn-ghost btn-sm mobile-only"
+            style={{ padding: '6px', fontSize: 18, color: 'var(--text-primary)' }}
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
         </div>
       </header>
+
+      {/* Mobile Drawer */}
+      {mobileMenuOpen && (
+        <div style={{
+          position: 'fixed', top: 72, left: 0, right: 0, bottom: 0,
+          background: 'rgba(9, 9, 15, 0.98)', backdropFilter: 'blur(20px)',
+          zIndex: 999, padding: '24px', display: 'flex', flexDirection: 'column', gap: 16,
+          animation: 'fadeIn 0.2s ease', overflowY: 'auto'
+        }}>
+          <a href="#templates" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            🎨 5 Resume Templates
+          </a>
+          <a href="#latex" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            ⌨️ Overleaf LaTeX Studio
+          </a>
+          <a href="#irus-ai" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--accent)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            🤖 IRUS AI Assistant
+          </a>
+          <a href="#simulator" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            🎯 Live ATS Simulator
+          </a>
+          <a href="#features" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            ✨ Features &amp; Privacy
+          </a>
+          <a href="#contact" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            💬 Contact Developer (Nejamul Haque)
+          </a>
+          <a href="#faq" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            ❓ FAQ
+          </a>
+          <Link to="/privacy" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14, padding: '8px 0' }}>
+            🔒 Privacy Policy
+          </Link>
+          <Link to="/terms" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14, padding: '8px 0' }}>
+            📜 Terms of Service
+          </Link>
+          
+          <button
+            onClick={() => { setMobileMenuOpen(false); handleStartBuilding(); }}
+            className="btn btn-primary btn-lg"
+            style={{ width: '100%', justifyContent: 'center', marginTop: 12, fontWeight: 800 }}
+          >
+            Create My Resume Free 🚀
+          </button>
+        </div>
+      )}
 
       {/* Main Container with top padding for frozen navbar */}
       <main role="main" style={{ paddingTop: 88 }}>

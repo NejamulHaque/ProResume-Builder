@@ -458,6 +458,14 @@ select.input { cursor: pointer; }
 .bottom-nav-btn.active { color: var(--accent); background: var(--accent-glow); }
 .bottom-nav-btn svg { width: 20px; height: 20px; }
 
+/* ── Responsive visibility utilities ─────────────── */
+@media (min-width: 769px) {
+  .mobile-only { display: none !important; }
+}
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+}
+
 /* ── Editor mobile layout ────────────────────────── */
 @media (max-width: 768px) {
   .editor-bar { padding: 0 12px; gap: 8px; }
