@@ -192,7 +192,14 @@ const MinimalTemplate = memo(({ data, accentColor, customFont }) => {
           {contacts.map((c,i) => <span key={i}>{c}</span>)}
         </div>
       </div>
-      {p.summary && <div style={{ marginBottom:24,borderLeft:`3px solid ${acc}`,paddingLeft:14 }}><p style={{ fontSize:13,lineHeight:1.8,color:'#555',fontStyle:'italic' }}>{p.summary}</p></div>}
+      {p.summary && (
+        <div style={{ marginBottom: 22 }}>
+          <h2 style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', borderBottom: '1px solid #ddd', paddingBottom: 5, marginBottom: 10, color: acc }}>
+            Summary
+          </h2>
+          <p style={{ fontSize: 12.5, lineHeight: 1.7, color: '#444' }}>{p.summary}</p>
+        </div>
+      )}
       
       {data.experience?.length > 0 && (
         <div style={{ marginBottom:22 }}>
@@ -289,7 +296,15 @@ const ExecutiveTemplate = memo(({ data, accentColor, customFont }) => {
       </div>
       <div style={{ height:4,background:`linear-gradient(90deg,${acc},#daa520,${acc})` }} />
       <div style={{ padding:'30px 40px' }}>
-        {p.summary && <div style={{ marginBottom:22,borderLeft:`3px solid ${acc}`,paddingLeft:14 }}><p style={{ fontSize:13.5,lineHeight:1.85,color:'#444',fontStyle:'italic' }}>{p.summary}</p></div>}
+        {p.summary && (
+          <div style={{ marginBottom: 22 }}>
+            <h2 style={{ fontSize: 11.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '2px', color: acc, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span style={{ display: 'inline-block', width: 18, height: 1.5, background: acc }} />Professional Summary
+              <span style={{ flex: 1, height: 1.5, background: `${acc}40` }} />
+            </h2>
+            <p style={{ fontSize: 12.5, lineHeight: 1.75, color: '#444' }}>{p.summary}</p>
+          </div>
+        )}
         
         {data.experience?.length > 0 && (
           <div style={{ marginBottom:22 }}>
@@ -402,7 +417,12 @@ const TechnicalTemplate = memo(({ data, accentColor, customFont }) => {
           </div>
         </div>
         
-        {p.summary && <div style={{ marginBottom:18,padding:'10px 14px',borderLeft:`3px solid ${acc}` }}><span style={{ fontSize:11.5,color:'#8b949e' }}>/** {p.summary} */</span></div>}
+        {p.summary && (
+          <div style={{ marginBottom: 18 }}>
+            <div style={{ fontSize: 11, color: '#484f58', marginBottom: 6 }}><span style={{ color: acc }}>// </span><span style={{ color: '#d2a8ff' }}>Summary</span></div>
+            <p style={{ fontSize: 12, lineHeight: 1.65, color: '#c9d1d9', margin: 0 }}>{p.summary}</p>
+          </div>
+        )}
         
         {data.experience?.length > 0 && (
           <div style={{ marginBottom:18 }}>
@@ -529,7 +549,12 @@ const CreativeTemplate = memo(({ data, accentColor, customFont }) => {
 
       {/* Main Column */}
       <div style={{ padding:'32px 28px' }}>
-        {p.summary && <p style={{ fontSize:13,lineHeight:1.8,color:'#555',marginBottom:22,borderLeft:`4px solid ${acc}`,paddingLeft:13 }}>{p.summary}</p>}
+        {p.summary && (
+          <div style={{ marginBottom: 22 }}>
+            <h2 style={{ fontSize: 13, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '2px', color: acc, marginBottom: 10 }}>Summary</h2>
+            <p style={{ fontSize: 12.5, lineHeight: 1.7, color: '#555', margin: 0 }}>{p.summary}</p>
+          </div>
+        )}
         {data.experience?.length > 0 && (
           <div style={{ marginBottom:22 }}>
             <h2 style={{ fontSize:13,fontWeight:800,textTransform:'uppercase',letterSpacing:'2px',color:acc,marginBottom:13 }}>Experience</h2>
