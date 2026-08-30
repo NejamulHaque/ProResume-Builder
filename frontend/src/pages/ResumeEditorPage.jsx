@@ -491,6 +491,17 @@ export default function ResumeEditorPage() {
     triggerChange(parsed, title, template)
   }
 
+  const handleApplySummary = (summaryText) => {
+    const updated = {
+      ...data,
+      personal: {
+        ...data.personal,
+        summary: summaryText
+      }
+    }
+    handleDataChange(updated)
+  }
+
   const handleAddMissingSkill = (skill) => {
     const current = data.skills?.technical || []
     if (current.some(c => c.toLowerCase() === skill.toLowerCase())) return
