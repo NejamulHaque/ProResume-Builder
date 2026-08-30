@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'react-hot-toast'
 
 const COMMON_STOP_WORDS = new Set([
   'and', 'the', 'to', 'of', 'a', 'in', 'for', 'is', 'on', 'that', 'by', 'this',
@@ -45,22 +46,22 @@ const COMMON_STOP_WORDS = new Set([
   'ability', 'skills', 'role', 'team', 'working', 'candidate', 'position'
 ])
 
-export default function JobDescriptionMatcher({ resumeData, onAddSkill }) {
+export default function JobDescriptionMatcher({ currentSkills = [], resumeData, onAddSkill, onAddMultipleSkills }) {
   const [jobText, setJobText] = useState('')
   const [isOpen, setIsOpen] = useState(false)
 
   // Extract text from current resume
-  const resumeSkills = [
-    ...(resumeData?.skills?.technical || []),
+  const skillsList = [
+    ...(resumeData?.skills?.technical || currentSkills || []),
     ...(resumeData?.skills?.soft || []),
     ...(resumeData?.skills?.languages || [])
-  ].map(s => s.toLowerCase().trim())
+  ].map(s => String(s).toLowerCase().trim())
 
   const resumeFullText = [
     resumeData?.personal?.summary || '',
     ...(resumeData?.experience || []).map(e => `${e.role} ${e.company} ${(e.bullets || []).join(' ')}`),
     ...(resumeData?.projects || []).map(p => `${p.name} ${p.description} ${(p.tech || []).join(' ')}`),
-    ...resumeSkills
+    ...skillsList
   ].join(' ').toLowerCase()
 
   // Extract potential keywords from Job Description
@@ -75,20 +76,34 @@ export default function JobDescriptionMatcher({ resumeData, onAddSkill }) {
   // Sort top keywords
   const topKeywords = Object.entries(freqMap)
     .sort((a, b) => b[1] - a[1])
-    .slice(0, 15)
+    .slice(0, 16)
     .map(([word, count]) => {
       const isMatched = resumeFullText.includes(word)
       return { word, count, isMatched }
     })
 
-  const matchedCount = topKeywords.filter(k => k.isMatched).length
-  const totalKeywords = topKeywords.length
-  const matchPercentage = totalKeywords > 0 ? Math.round((matchedCount / totalKeywords) * 100) : 0
+  const matchedKeywords = topKeywords.filter(k => k.isMatched)
+  const missingKeywords = topKeywords.filter(k => !k.isMatched)
+  const matchPercentage = topKeywords.length > 0
+    ? Math.round((matchedKeywords.length / topKeywords.length) * 100)
+    : 0
+
+  const handleInjectAllMissing = () => {
+    if (missingKeywords.length === 0) return
+    const wordsToInject = missingKeywords.map(k => k.word)
+    if (onAddMultipleSkills) {
+      onAddMultipleSkills(wordsToInject)
+    } else if (onAddSkill) {
+      wordsToInject.forEach(w => onAddSkill(w))
+    }
+    toast.success(`Injected ${wordsToInject.length} ATS keywords into your technical skills! 🎯`)
+  }
 
   return (
     <div style={{
       background: 'var(--bg-card)', border: '1px solid var(--border)',
-      borderRadius: 'var(--radius-md)', padding: '14px 16px', marginBottom: 16
+      borderRadius: 'var(--radius-md)', padding: '14px 16px', marginBottom: 16,
+      boxShadow: 'var(--shadow-sm)'
     }}>
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -100,12 +115,13 @@ export default function JobDescriptionMatcher({ resumeData, onAddSkill }) {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
           <span style={{ fontSize: 16 }}>🎯</span>
-          <span style={{ fontSize: 13.5, fontWeight: 700 }}>ATS Job Matcher</span>
+          <span style={{ fontSize: 13.5, fontWeight: 700 }}>ATS Job Matcher & Keyword Gap Injector</span>
           {jobText && (
             <span style={{
-              fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 100,
+              fontSize: 11, fontWeight: 800, padding: '2px 9px', borderRadius: 100,
               background: matchPercentage >= 70 ? 'rgba(61,224,160,0.15)' : 'rgba(255,179,71,0.15)',
               color: matchPercentage >= 70 ? 'var(--success)' : 'var(--warning)',
+              border: `1px solid ${matchPercentage >= 70 ? 'rgba(61,224,160,0.3)' : 'rgba(255,179,71,0.3)'}`
             }}>
               {matchPercentage}% Match
             </span>
@@ -122,52 +138,73 @@ export default function JobDescriptionMatcher({ resumeData, onAddSkill }) {
       {isOpen && (
         <div style={{ marginTop: 14, animation: 'fadeIn 0.2s ease' }}>
           <p style={{ fontSize: 12, color: 'var(--text-muted)', marginBottom: 8, lineHeight: 1.4 }}>
-            Paste the job posting description below to check keyword match and ATS score:
+            Paste a target Job Description from LinkedIn / Indeed to calculate matching score & auto-inject missing ATS keywords:
           </p>
           <textarea
             className="input"
             rows={3}
             value={jobText}
             onChange={e => setJobText(e.target.value)}
-            placeholder="Paste job requirements, responsibilities or job posting here…"
-            style={{ fontSize: 12, marginBottom: 12 }}
+            placeholder="Paste job posting text (e.g. AWS, Kubernetes, Terraform, Docker, CI/CD pipelines, Prometheus)..."
+            style={{ fontSize: 12, marginBottom: 12, width: '100%', resize: 'vertical' }}
           />
 
-          {totalKeywords > 0 && (
+          {topKeywords.length > 0 && (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-                <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)' }}>
-                  Detected ATS Keywords ({matchedCount}/{totalKeywords} found):
+              {/* Progress Bar & Header */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
+                  ATS Keyword Analysis: {matchedKeywords.length} of {topKeywords.length} Found
                 </span>
-                <span style={{
-                  fontSize: 12, fontWeight: 700,
-                  color: matchPercentage >= 70 ? 'var(--success)' : 'var(--warning)'
-                }}>
-                  {matchPercentage}% Match
-                </span>
+                
+                {missingKeywords.length > 0 && (
+                  <button
+                    onClick={handleInjectAllMissing}
+                    className="btn btn-primary btn-xs"
+                    style={{ fontSize: 11, fontWeight: 700, padding: '3px 8px', borderRadius: 6 }}
+                  >
+                    ✨ Inject All ({missingKeywords.length}) Missing
+                  </button>
+                )}
               </div>
 
+              {/* Match Progress Bar */}
+              <div style={{ height: 6, background: 'rgba(255,255,255,0.08)', borderRadius: 3, overflow: 'hidden', marginBottom: 12 }}>
+                <div style={{
+                  height: '100%',
+                  width: `${matchPercentage}%`,
+                  background: matchPercentage >= 70 ? 'linear-gradient(90deg, #10b981, #3de0a0)' : 'linear-gradient(90deg, #f59e0b, #ffb347)',
+                  borderRadius: 3,
+                  transition: 'width 0.4s ease'
+                }} />
+              </div>
+
+              {/* Heatmap Tags */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                {topKeywords.map(({ word, isMatched, count }) => (
+                {topKeywords.map(({ word, isMatched }) => (
                   <span
                     key={word}
                     style={{
-                      display: 'inline-flex', alignItems: 'center', gap: 4,
+                      display: 'inline-flex', alignItems: 'center', gap: 5,
                       fontSize: 11.5, padding: '3px 8px', borderRadius: 6,
                       background: isMatched ? 'rgba(61, 224, 160, 0.12)' : 'rgba(255, 107, 157, 0.12)',
                       border: `1px solid ${isMatched ? 'rgba(61, 224, 160, 0.3)' : 'rgba(255, 107, 157, 0.3)'}`,
                       color: isMatched ? 'var(--success)' : 'var(--danger)',
+                      fontWeight: 600
                     }}
                   >
                     <span>{isMatched ? '✓' : '✗'}</span>
-                    <strong>{word}</strong>
+                    <span>{word}</span>
                     {!isMatched && onAddSkill && (
                       <button
-                        onClick={() => onAddSkill(word)}
-                        title={`Add "${word}" to skills`}
+                        onClick={() => {
+                          onAddSkill(word)
+                          toast.success(`Added "${word}" to skills!`)
+                        }}
+                        title={`Add "${word}" to technical skills`}
                         style={{
-                          background: 'none', border: 'none', color: 'var(--accent)',
-                          cursor: 'pointer', padding: '0 2px', fontWeight: 700, fontSize: 12
+                          background: 'rgba(124,111,255,0.2)', border: 'none', color: 'var(--accent)',
+                          cursor: 'pointer', padding: '0 4px', borderRadius: 4, fontWeight: 700, fontSize: 11
                         }}
                       >
                         +
@@ -176,16 +213,6 @@ export default function JobDescriptionMatcher({ resumeData, onAddSkill }) {
                   </span>
                 ))}
               </div>
-
-              {matchPercentage < 70 && (
-                <div style={{
-                  marginTop: 10, padding: '8px 10px', borderRadius: 6,
-                  background: 'rgba(255, 179, 71, 0.08)', border: '1px solid rgba(255, 179, 71, 0.2)',
-                  fontSize: 11.5, color: 'var(--warning)', lineHeight: 1.4
-                }}>
-                  💡 Click <strong>+</strong> next to missing keywords to add them to your skills and increase your interview callback chances!
-                </div>
-              )}
             </div>
           )}
         </div>

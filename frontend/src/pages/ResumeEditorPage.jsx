@@ -19,6 +19,8 @@ import CoverLetterModal from '../components/resume/CoverLetterModal.jsx'
 import LatexEditor from '../components/resume/LatexEditor.jsx'
 import SecurityScannerModal from '../components/resume/SecurityScannerModal.jsx'
 import ResumeTranslatorModal from '../components/resume/ResumeTranslatorModal.jsx'
+import ExportSuiteModal from '../components/resume/ExportSuiteModal.jsx'
+import VersionHistoryModal from '../components/resume/VersionHistoryModal.jsx'
 
 const ACCENT_PALETTES = [
   { id: 'indigo',  name: 'Indigo',  color: '#7c6fff' },
@@ -73,18 +75,16 @@ function EditorBar({
   isMobile, onLogout, onSelectPreset, onShowNotice, resumeData, onApplySummary,
   onExportJSON, onImportJSON, zoom, setZoom, onOpenCoverLetter,
   editorMode, onToggleEditorMode, onExportTex, onToggleAts, atsScore,
-  onOpenSecurityScanner, onOpenTranslator, showQrCode, onToggleQrCode
+  onOpenSecurityScanner, onOpenTranslator, showQrCode, onToggleQrCode,
+  onOpenExportSuite, onOpenVersionHistory
 }) {
   const [toolsOpen, setToolsOpen] = useState(false)
-  const [aiMenuOpen, setAiMenuOpen] = useState(false)
   const toolsRef = useRef(null)
-  const aiRef = useRef(null)
 
   // Close dropdowns on click outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (toolsRef.current && !toolsRef.current.contains(e.target)) setToolsOpen(false)
-      if (aiRef.current && !aiRef.current.contains(e.target)) setAiMenuOpen(false)
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
@@ -233,13 +233,13 @@ function EditorBar({
           </select>
         )}
 
-        {/* Tools Menu Dropdown (Presets, Cover Letter, Translator, Backup) */}
+        {/* Tools Menu Dropdown */}
         <div ref={toolsRef} style={{ position: 'relative' }}>
           <button
             onClick={() => setToolsOpen(!toolsOpen)}
             className="btn btn-secondary btn-xs"
             style={{ padding: '6px 10px', fontSize: 12, fontWeight: 600, borderRadius: 8 }}
-            title="More Resume Tools & Presets"
+            title="More Resume Tools & Snapshots"
           >
             ⚙️ Tools ▾
           </button>
@@ -248,10 +248,24 @@ function EditorBar({
             <div style={{
               position: 'absolute', top: '100%', right: 0, marginTop: 6,
               background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-              borderRadius: 12, padding: 8, width: 220, zIndex: 200,
+              borderRadius: 12, padding: 8, width: 230, zIndex: 200,
               boxShadow: '0 16px 40px rgba(0,0,0,0.7)', animation: 'slideUp 0.15s ease',
               display: 'flex', flexDirection: 'column', gap: 4
             }}>
+              <button
+                onClick={() => { setToolsOpen(false); onOpenVersionHistory(); }}
+                className="btn btn-ghost btn-xs"
+                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
+              >
+                📸 Version History & Snapshots
+              </button>
+              <button
+                onClick={() => { setToolsOpen(false); onOpenExportSuite(); }}
+                className="btn btn-ghost btn-xs"
+                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
+              >
+                📥 Multi-Format Exporter Suite
+              </button>
               <button
                 onClick={() => { setToolsOpen(false); onOpenCoverLetter(); }}
                 className="btn btn-ghost btn-xs"
@@ -273,20 +287,6 @@ function EditorBar({
               >
                 📱 Toggle Header QR Code {showQrCode ? '(ON)' : '(OFF)'}
               </button>
-              <button
-                onClick={() => { setToolsOpen(false); onExportTex(); }}
-                className="btn btn-ghost btn-xs"
-                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
-              >
-                📄 Export Overleaf .tex
-              </button>
-              <button
-                onClick={() => { setToolsOpen(false); onExportJSON(); }}
-                className="btn btn-ghost btn-xs"
-                style={{ justifyContent: 'flex-start', padding: '8px 10px', width: '100%', fontSize: 12 }}
-              >
-                📦 Export JSON Backup
-              </button>
               <div style={{ borderTop: '1px solid var(--border)', margin: '4px 0' }} />
               <div style={{ padding: '4px 10px' }}>
                 <SampleDataPicker onSelectPreset={(p) => { setToolsOpen(false); onSelectPreset(p); }} />
@@ -295,10 +295,17 @@ function EditorBar({
           )}
         </div>
 
-        <ShareResumeButton resumeId={resumeId} isPublic={isPublic} onToggle={onVisibilityToggle} />
+        {/* Multi-Format Export Suite Button */}
+        <button
+          onClick={onOpenExportSuite}
+          className="btn btn-secondary btn-xs"
+          style={{ padding: '6px 10px', fontSize: 12, fontWeight: 700, borderRadius: 8, background: 'rgba(124,111,255,0.12)', color: 'var(--accent)', border: '1px solid rgba(124,111,255,0.3)' }}
+          title="Open Multi-Format Export Suite (PDF, LaTeX, Markdown, TXT)"
+        >
+          📥 Export ▾
+        </button>
 
-        {/* Primary Export Button */}
-        <ExportButton title={title} />
+        <ShareResumeButton resumeId={resumeId} isPublic={isPublic} onToggle={onVisibilityToggle} />
 
         {/* Save Button */}
         <button
@@ -348,14 +355,45 @@ export default function ResumeEditorPage() {
   const [manualSaving,   setManualSaving]   = useState(false)
   const [previewVisible, setPreviewVisible] = useState(true)
   const [mobileTab,      setMobileTab]      = useState('form')
-  const [isMobile,       setIsMobile]       = useState(() => window.innerWidth < 900)
-  const [show10DayNotice, setShow10DayNotice] = useState(false)
-  const [showCoverLetter, setShowCoverLetter] = useState(false)
-  const [showSecurityScanner, setShowSecurityScanner] = useState(false)
   const [showTranslator,  setShowTranslator]   = useState(false)
   const [showQrCode,      setShowQrCode]       = useState(false)
+  const [showExportSuite, setShowExportSuite]  = useState(false)
+  const [showVersionHistory, setShowVersionHistory] = useState(false)
   const [showAtsDrawer,   setShowAtsDrawer]   = useState(false)
   const [zoom,           setZoom]           = useState(0.82)
+  const [splitRatio,     setSplitRatio]     = useState(() => {
+    try { return Number(localStorage.getItem('proresume_split_ratio')) || 48 }
+    catch { return 48 }
+  })
+  const [isDraggingSplit, setIsDraggingSplit] = useState(false)
+
+  // Mouse & Touch Split Resizing
+  const handleMouseDownSplit = useCallback((e) => {
+    e.preventDefault()
+    setIsDraggingSplit(true)
+  }, [])
+
+  useEffect(() => {
+    if (!isDraggingSplit) return
+    const onMove = (e) => {
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX
+      const newRatio = Math.min(Math.max((clientX / window.innerWidth) * 100, 26), 74)
+      setSplitRatio(newRatio)
+      try { localStorage.setItem('proresume_split_ratio', newRatio.toFixed(1)) } catch {}
+    }
+    const onEnd = () => setIsDraggingSplit(false)
+
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onEnd)
+    window.addEventListener('touchmove', onMove)
+    window.addEventListener('touchend', onEnd)
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onEnd)
+      window.removeEventListener('touchmove', onMove)
+      window.removeEventListener('touchend', onEnd)
+    }
+  }, [isDraggingSplit])
 
   // Track viewport resize
   useEffect(() => {
@@ -449,15 +487,34 @@ export default function ResumeEditorPage() {
     triggerChange(parsed, title, template)
   }
 
-  const handleApplySummary = (summaryText) => {
-    const updated = {
+  const handleAddMissingSkill = (skill) => {
+    const current = data.skills?.technical || []
+    if (current.some(c => c.toLowerCase() === skill.toLowerCase())) return
+    handleDataChange({
       ...data,
-      personal: {
-        ...data.personal,
-        summary: summaryText
+      skills: {
+        ...data.skills,
+        technical: [...current, skill]
       }
-    }
-    handleDataChange(updated)
+    })
+  }
+
+  const handleAddMultipleSkills = (newSkills) => {
+    const current = data.skills?.technical || []
+    const toAdd = newSkills.filter(s => !current.some(c => c.toLowerCase() === s.toLowerCase()))
+    if (toAdd.length === 0) return
+    handleDataChange({
+      ...data,
+      skills: {
+        ...data.skills,
+        technical: [...current, ...toAdd]
+      }
+    })
+  }
+
+  const handleRestoreSnapshot = (restoredData, restoredTitle) => {
+    if (restoredData) handleDataChange(restoredData)
+    if (restoredTitle) handleTitleChange(restoredTitle)
   }
 
   // Calculate live ATS readiness score
@@ -487,75 +544,51 @@ export default function ResumeEditorPage() {
     }
   }
 
-  // Export JSON backup
-  const handleExportJSON = () => {
-    const blob = new Blob([JSON.stringify({ title, template, data }, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${title.toLowerCase().replace(/\s+/g, '_')}_backup.json`
-    a.click()
-    URL.revokeObjectURL(url)
-    toast.success('JSON backup downloaded!')
-  }
-
-  // Export Overleaf .tex source
-  const handleExportTex = () => {
-    const code = resumeToLatex(data)
-    downloadTexFile(title, code)
-    toast.success('Overleaf .tex source exported!')
-  }
-
-  // Visibility toggle
   const handleVisibilityToggle = async (val) => {
     setIsPublic(val)
     if (id) {
-      const { error } = await updateResume(id, { is_public: val })
-      if (error) {
-        setIsPublic(!val)
-        toast.error('Failed to update visibility')
-      } else {
-        toast.success(`Resume is now ${val ? 'public' : 'private'}`)
-      }
+      await updateResume(id, { is_public: val })
+      toast.success(val ? 'Resume is now public' : 'Resume is now private')
     }
   }
 
   // 1-Click Role Presets
   const handleSelectPreset = (presetData) => {
     handleDataChange(presetData)
+    toast.success('Sample preset loaded!')
+  }
+
+  // Export JSON backup
+  const handleExportJSON = () => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${title.toLowerCase().replace(/\s+/g, '_')}_backup.json`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success('JSON export downloaded! 📦')
+  }
+
+  // Export Overleaf .tex source
+  const handleExportTex = () => {
+    const texCode = resumeToLatex(data)
+    downloadTexFile(title, texCode)
+    toast.success('Overleaf .tex source downloaded! 📄')
   }
 
   // Sign out handler
   const handleLogout = async () => {
-    if (window.confirm('Sign out of ProResume? Make sure you have downloaded your PDF copy!')) {
-      if (logout) await logout()
-      await signOut()
-      toast.success('Signed out')
-      navigate('/')
-    }
-  }
-
-  // Add missing skill from ATS Job Matcher
-  const handleAddMissingSkill = (skill) => {
-    const currTechnical = data.skills?.technical || []
-    if (!currTechnical.includes(skill)) {
-      const updated = {
-        ...data,
-        skills: {
-          ...data.skills,
-          technical: [...currTechnical, skill]
-        }
-      }
-      handleDataChange(updated)
-      toast.success(`Added "${skill}" to Technical Skills!`)
-    }
+    await signOut()
+    logout()
+    navigate('/')
+    toast.success('Logged out')
   }
 
   if (loading) {
     return (
-      <div className="full-page-center" style={{ gap: 14, flexDirection: 'column' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
         <div className="spinner lg" />
-        <span style={{ color: 'var(--text-muted)', fontSize: 14 }}>Loading your resume…</span>
       </div>
     )
   }
@@ -590,6 +623,24 @@ export default function ResumeEditorPage() {
         onClose={() => setShowTranslator(false)}
         resumeData={data}
         onApplyLocale={handleDataChange}
+      />
+
+      {/* Multi-Format Exporter Suite Modal */}
+      <ExportSuiteModal
+        isOpen={showExportSuite}
+        onClose={() => setShowExportSuite(false)}
+        resumeData={data}
+        title={title}
+      />
+
+      {/* Version History & Snapshots Modal */}
+      <VersionHistoryModal
+        isOpen={showVersionHistory}
+        onClose={() => setShowVersionHistory(false)}
+        resumeId={id || 'default'}
+        currentData={data}
+        currentTitle={title}
+        onRestoreSnapshot={handleRestoreSnapshot}
       />
 
       {/* Sticky 10-day retention warning bar */}
@@ -633,6 +684,8 @@ export default function ResumeEditorPage() {
         onOpenTranslator={() => setShowTranslator(true)}
         showQrCode={showQrCode}
         onToggleQrCode={() => setShowQrCode(!showQrCode)}
+        onOpenExportSuite={() => setShowExportSuite(true)}
+        onOpenVersionHistory={() => setShowVersionHistory(true)}
       />
 
       {/* Mobile tabs */}
@@ -646,11 +699,12 @@ export default function ResumeEditorPage() {
           <div
             className="editor-form-panel"
             style={{
-              flex: (isMobile && mobileTab !== 'form') ? 0 : 1,
+              flex: (isMobile && mobileTab !== 'form') ? 0 : (!isMobile && previewVisible ? `${splitRatio} 0 0` : 1),
+              width: (!isMobile && previewVisible) ? `${splitRatio}%` : '100%',
               display: (isMobile && mobileTab !== 'form') ? 'none' : 'flex',
               flexDirection: 'column',
               overflowY: 'auto',
-              borderRight: (!isMobile && previewVisible) ? '1px solid var(--border)' : 'none',
+              borderRight: (!isMobile && previewVisible) ? 'none' : 'none',
               background: 'var(--bg-primary)',
             }}
           >
@@ -662,7 +716,9 @@ export default function ResumeEditorPage() {
                   ...(data.skills?.soft || []),
                   ...(data.skills?.languages || [])
                 ]}
+                resumeData={data}
                 onAddSkill={handleAddMissingSkill}
+                onAddMultipleSkills={handleAddMultipleSkills}
               />
             </div>
 
@@ -671,11 +727,12 @@ export default function ResumeEditorPage() {
         ) : (
           <div
             style={{
-              flex: (isMobile && mobileTab !== 'latex') ? 0 : 1,
+              flex: (isMobile && mobileTab !== 'latex') ? 0 : (!isMobile && previewVisible ? `${splitRatio} 0 0` : 1),
+              width: (!isMobile && previewVisible) ? `${splitRatio}%` : '100%',
               display: (isMobile && mobileTab !== 'latex') ? 'none' : 'flex',
               flexDirection: 'column',
               height: '100%',
-              borderRight: (!isMobile && previewVisible) ? '1px solid var(--border)' : 'none',
+              borderRight: (!isMobile && previewVisible) ? 'none' : 'none',
             }}
           >
             <LatexEditor
@@ -688,12 +745,37 @@ export default function ResumeEditorPage() {
           </div>
         )}
 
+        {/* DRAGGABLE SPLIT-PANE DIVIDER (Overleaf style) */}
+        {!isMobile && previewVisible && (
+          <div
+            onMouseDown={handleMouseDownSplit}
+            style={{
+              width: 8,
+              cursor: 'col-resize',
+              background: isDraggingSplit ? 'var(--accent)' : 'transparent',
+              borderLeft: '1px solid var(--border)',
+              borderRight: '1px solid var(--border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 40,
+              userSelect: 'none',
+              transition: 'background 0.15s',
+              flexShrink: 0
+            }}
+            title="Drag to resize Visual/LaTeX Editor and Preview panes"
+          >
+            <div style={{ width: 2, height: 28, borderRadius: 2, background: 'rgba(255,255,255,0.25)' }} />
+          </div>
+        )}
+
         {/* PREVIEW PANEL */}
         {(!isMobile ? previewVisible : mobileTab === 'preview') && (
           <div
             className="editor-preview-panel"
             style={{
-              flex: 1.25,
+              flex: !isMobile ? `${100 - splitRatio} 0 0` : 1,
+              width: !isMobile ? `${100 - splitRatio}%` : '100%',
               background: '#090d14',
               overflowY: 'auto',
               display: 'flex',

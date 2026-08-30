@@ -2,6 +2,7 @@ import { useState } from 'react'
 import SectionNav, { SECTIONS } from './SectionNav.jsx'
 import { BulletImprover, SummaryGenerator } from './AIAssistant.jsx'
 import { genId } from '../../lib/resumeDefaults.js'
+import ImpactScorerBadge from './ImpactScorer.jsx'
 
 function Field({ label, children }) {
   return (
@@ -168,20 +169,24 @@ function ExperienceSection({ data, onChange }) {
           <div>
             <div className="form-label" style={{ marginBottom: 8 }}>Achievements / Responsibilities</div>
             {(exp.bullets||[]).map((bullet, i) => (
-              <div key={i} style={{ marginBottom: 8 }}>
+              <div key={i} style={{ marginBottom: 10 }}>
                 <div style={{ display: 'flex', gap: 7, alignItems: 'flex-start' }}>
                   <textarea className="input" rows={2} value={bullet}
                     onChange={e => updB(exp.id, i, e.target.value)}
-                    placeholder="Describe your achievement with impact and metrics…"
+                    placeholder="Describe your achievement with impact and metrics (e.g. Automated CI/CD reducing latency by 40%)..."
                     style={{ flex: 1 }} />
                   <button onClick={() => remB(exp.id,i)}
                     style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--danger)', fontSize: 18, marginTop: 6, flexShrink: 0 }}>×</button>
                 </div>
-                {/* AI bullet improver per bullet */}
-                <BulletImprover
-                  bullet={bullet}
-                  onAccept={improved => updB(exp.id, i, improved)}
-                />
+                
+                {/* Real-Time Impact & Action Verb Evaluator */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4, flexWrap: 'wrap', gap: 6 }}>
+                  <ImpactScorerBadge bulletText={bullet} />
+                  <BulletImprover
+                    bullet={bullet}
+                    onAccept={improved => updB(exp.id, i, improved)}
+                  />
+                </div>
               </div>
             ))}
             <button onClick={() => addB(exp.id)}
