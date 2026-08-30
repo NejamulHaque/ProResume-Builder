@@ -54,26 +54,25 @@ export default function LandingPage() {
   const [activeFaq, setActiveFaq] = useState(null)
   
   // Interactive Simulator State
-  const [simName, setSimName] = useState('Nejamul Haque')
-  const [simRole, setSimRole] = useState('Full-Stack Architect & AI Systems Engineer')
-  const [simBullet, setSimBullet] = useState('Architected IRUS AI & cloud microservices scaling to 100K+ users with 99.99% uptime')
+  const [simName, setSimName] = useState('NEJAMUL HAQUE')
+  const [simRole, setSimRole] = useState('Computer Science Undergraduate | DevSecOps Aspirant')
+  const [simBullet, setSimBullet] = useState('Configured a local Linux environment to practice file system security, user privilege management, and process monitoring.')
 
   // Contact Form State
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [sendingContact, setSendingContact] = useState(false)
 
-  const isAdmin = user?.email === 'nejamulhaque.works@gmail.com'
+  const isAdmin = user?.email === 'nejamulhaque.works@gmail.com' || user?.email === 'nejamulhaqueruhaan86@gmail.com'
 
   const liveMockData = useMemo(() => {
     const base = JSON.parse(JSON.stringify(SAMPLE_RESUME_DATA))
-    base.personal.fullName = simName || 'Nejamul Haque'
-    base.personal.title = simRole || 'Full-Stack Architect & AI Systems Engineer'
+    base.personal.fullName = simName || 'NEJAMUL HAQUE'
+    base.personal.title = simRole || 'Computer Science Undergraduate | DevSecOps Aspirant'
     if (base.experience && base.experience[0]) {
-      base.experience[0].role = simRole || 'Full-Stack Architect & AI Systems Engineer'
       base.experience[0].bullets = [
         simBullet,
-        'Boosted backend query throughput by 44% utilizing PostgreSQL indexing on Neon DB.',
-        'Mentored 8 software engineers and led automated CI/CD pipelines.'
+        'Built a local sandbox to master Linux system administration, permissions, and CLI operations.',
+        'Conducted deep dives into networking protocols (TCP/IP, DNS, SSH, Firewalls) and data routing.'
       ]
     }
     return base

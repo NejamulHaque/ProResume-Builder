@@ -2,78 +2,66 @@ import { useState } from 'react'
 
 const ROLE_PRESETS = [
   {
-    id: 'swe',
-    name: 'Full-Stack Software Engineer',
-    icon: '💻',
+    id: 'devsecops',
+    name: 'DevSecOps & CS Undergraduate (Nejamul Haque)',
+    icon: '🛡️',
     data: {
       personal: {
-        fullName: 'Nejamul Haque',
-        title: 'Senior Full-Stack Engineer',
-        email: 'nejamulhaque.works@gmail.com',
-        phone: '+91 9876543210',
-        location: 'Bettiah, India',
-        website: 'nejamul.dev',
-        linkedin: 'linkedin.com/in/nejamulhaque',
-        github: 'github.com/nejamul05',
-        summary: 'Innovative Full-Stack Engineer with 5+ years of experience architecting high-traffic distributed applications, responsive React interfaces, and cloud-native backend services with 99.99% availability.'
+        fullName: 'NEJAMUL HAQUE',
+        title: 'Computer Science Undergraduate | DevSecOps Aspirant',
+        email: 'nejamulhaqueruhaan86@gmail.com',
+        phone: '+91-6299676007',
+        location: 'Bettiah, Bihar, India',
+        website: 'https://nejamulhaque.vercel.app/',
+        linkedin: 'https://www.linkedin.com/in/nejamulhaque/',
+        github: 'https://github.com/NejamulHaque',
+        summary: 'Motivated Computer Science undergraduate specializing in backend architecture, system administration, and infrastructure automation. Possesses strong foundational knowledge in Linux environments, network protocols, and version control workflows. Eager to leverage this technical core during the Amroha Police Cybersecurity Internship to analyze system vulnerabilities, investigate digital threats, and transition toward DevSecOps engineering.'
       },
       experience: [
         {
           id: 'exp-1',
-          company: 'HyperScale Cloud Systems',
-          role: 'Lead Full-Stack Developer',
-          location: 'Remote',
-          startDate: '2022-04',
+          company: 'Independent Technical Training & Development',
+          role: 'Self-Directed Systems & Infrastructure Learning',
+          location: 'Self-Paced',
+          startDate: '2026-03',
           endDate: '',
           current: true,
           bullets: [
-            'Architected distributed microservices with Node.js and PostgreSQL (Neon), scaling capacity by 300% to handle 10M+ daily events.',
-            'Engineered real-time web application in React with Vite and WebSocket streaming, reducing initial load latency by 45%.',
-            'Implemented automated CI/CD pipelines with zero-downtime rolling deployments across production clusters.'
-          ]
-        },
-        {
-          id: 'exp-2',
-          company: 'Apex Digital Labs',
-          role: 'Software Engineer',
-          location: 'Bangalore, India',
-          startDate: '2020-01',
-          endDate: '2022-03',
-          current: false,
-          bullets: [
-            'Developed 14+ REST & GraphQL API endpoints powering client-facing web and mobile applications.',
-            'Optimized complex database queries and indexed tables, cutting average response time from 380ms to 65ms.'
+            'Built a local sandbox to master Linux system administration, permissions, and CLI operations.',
+            'Conducted deep dives into networking protocols (TCP/IP, DNS, SSH, Firewalls) and data routing.',
+            'Managed personal project repositories independently using structured Git workflows.'
           ]
         }
       ],
       education: [
         {
           id: 'edu-1',
-          institution: 'National Institute of Technology',
-          degree: 'B.Tech in Computer Science & Engineering',
-          location: 'India',
-          startDate: '2016-08',
-          endDate: '2020-05',
-          gpa: '8.8 / 10',
-          honors: 'First Class with Distinction'
+          institution: 'Teerthanker Mahaveer University',
+          degree: 'B.Tech in Computer Science (Honors)',
+          location: 'Moradabad, Uttar Pradesh',
+          startDate: '2023-08',
+          endDate: '2027-05',
+          gpa: '',
+          honors: 'Capstone: AI-powered document classifier using Python & NLP'
         }
       ],
       skills: {
-        technical: ['React', 'Node.js', 'PostgreSQL', 'TypeScript', 'Docker', 'GraphQL', 'Next.js', 'Redis', 'AWS'],
-        soft: ['System Architecture', 'Agile / Scrum', 'Mentorship', 'Technical Strategy'],
-        languages: ['English (Fluent)', 'Hindi (Native)']
+        technical: ['Linux (Ubuntu)', 'Bash Scripting', 'System Permissions', 'Process Management', 'TCP/IP Stack', 'DNS', 'HTTP/HTTPS', 'SSH Key Management', 'Ports & Firewalls', 'OSI Model', 'JavaScript', 'Node.js', 'Express.js', 'MongoDB', 'Generative AI Integration'],
+        soft: ['Git & GitHub Workflows', 'Branching & Merging', 'Vulnerability Analysis', 'System Security'],
+        languages: ['English', 'Hindi', 'Urdu']
       },
       projects: [
         {
           id: 'proj-1',
-          name: 'ProResume AI Engine',
-          url: 'proresume.dev',
-          description: 'Full-stack AI resume architect with real-time ATS keyword matching and high-fidelity PDF vector renderer.',
-          tech: ['React', 'Node.js', 'PostgreSQL', 'Vite']
+          name: 'Linux System Administration & Automation Lab',
+          url: 'https://github.com/NejamulHaque',
+          tech: ['Linux (Ubuntu)', 'Bash Scripting', 'Security'],
+          description: 'Configured a local Linux environment to practice file system security, user privilege management, and process monitoring.'
         }
       ],
       certifications: [
-        { id: 'cert-1', name: 'AWS Certified Solutions Architect', issuer: 'Amazon Web Services', date: '2023-09' }
+        { id: 'cert-1', name: 'MongoDB Associate Developer', issuer: 'MongoDB University', date: '2025' },
+        { id: 'cert-2', name: 'GitHub Actions', issuer: 'GitHub', date: '2026' }
       ]
     }
   },
