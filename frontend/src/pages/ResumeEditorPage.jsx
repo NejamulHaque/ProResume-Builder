@@ -1,0 +1,715 @@
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { toast } from 'react-hot-toast'
+import { useAuth }       from '../hooks/useAuth.jsx'
+import { useAutoSave }   from '../hooks/useAutoSave.js'
+import { getResume, createResume, updateResume, signOut } from '../lib/supabase.js'
+import { DEFAULT_RESUME_DATA, SAMPLE_RESUME_DATA } from '../lib/resumeDefaults.js'
+import { resumeToLatex, latexToResume, downloadTexFile, generateJakesLatex } from '../lib/latexConverter.js'
+import ResumeForm        from '../components/resume/ResumeForm.jsx'
+import ResumePreview, { ResumePrintTarget } from '../components/resume/ResumePreview.jsx'
+import ExportButton      from '../components/resume/ExportButton.jsx'
+import ATSScore          from '../components/resume/ATSScore.jsx'
+import ShareResumeButton from '../components/resume/ShareResumeButton.jsx'
+import { AutoDeleteModal, AutoDeleteBanner } from '../components/ui/AutoDeleteNotice.jsx'
+import JobDescriptionMatcher from '../components/resume/JobDescriptionMatcher.jsx'
+import SampleDataPicker from '../components/resume/SampleDataPicker.jsx'
+import IRUSAssistant from '../components/resume/IRUSAssistant.jsx'
+import CoverLetterModal from '../components/resume/CoverLetterModal.jsx'
+import LatexEditor from '../components/resume/LatexEditor.jsx'
+
+const ACCENT_PALETTES = [
+  { id: 'indigo',  name: 'Indigo',  color: '#7c6fff' },
+  { id: 'emerald', name: 'Emerald', color: '#3de0a0' },
+  { id: 'rose',    name: 'Rose',    color: '#ff6b9d' },
+  { id: 'gold',    name: 'Gold',    color: '#b8860b' },
+  { id: 'cyan',    name: 'Cyan',    color: '#00d4aa' },
+  { id: 'purple',  name: 'Purple',  color: '#a855f7' },
+  { id: 'crimson', name: 'Crimson', color: '#ef4444' },
+]
+
+const FONT_OPTIONS = [
+  { id: 'sans',  name: 'Modern Sans', font: '"Segoe UI",system-ui,sans-serif' },
+  { id: 'serif', name: 'Classic Serif', font: 'Georgia,"Times New Roman",serif' },
+  { id: 'mono',  name: 'Code Mono', font: '"JetBrains Mono","Fira Code",monospace' },
+]
+
+// ─── Mobile tab bar for editor ─────────────────────
+function EditorMobileTabs({ activeTab, onChange }) {
+  const tabs = [
+    { id: 'form',    label: 'Edit',    icon: '✏️' },
+    { id: 'latex',   label: 'LaTeX',   icon: '⌨️' },
+    { id: 'preview', label: 'Preview', icon: '👁' },
+    { id: 'ats',     label: 'ATS',     icon: '📊' },
+  ]
+  return (
+    <div style={{
+      display: 'flex', background: 'var(--bg-secondary)',
+      borderBottom: '1px solid var(--border)',
+    }}>
+      {tabs.map(t => (
+        <button key={t.id} onClick={() => onChange(t.id)} style={{
+          flex: 1, padding: '11px 8px', border: 'none', cursor: 'pointer',
+          background: activeTab === t.id ? 'var(--bg-card)' : 'transparent',
+          color: activeTab === t.id ? 'var(--accent)' : 'var(--text-muted)',
+          borderBottom: activeTab === t.id ? '2px solid var(--accent)' : '2px solid transparent',
+          fontFamily: 'var(--font-body)', fontSize: 13, fontWeight: 500,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+          transition: 'all 0.15s',
+        }}>
+          <span>{t.icon}</span> {t.label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+// ─── Professional Top Bar ──────────────────────────
+function EditorBar({ title, template, onTitleChange, onTemplateChange, onSave, saving,
+                     onTogglePreview, previewVisible, resumeId, isPublic, onVisibilityToggle,
+                     isMobile, onLogout, onSelectPreset, onShowNotice, resumeData, onApplySummary,
+                     onExportJSON, onImportJSON, zoom, setZoom, onOpenCoverLetter,
+                     editorMode, onToggleEditorMode, onExportTex, onToggleAts, atsScore }) {
+  return (
+    <div style={{
+      height: 58, background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border)',
+      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+      padding: '0 14px', flexShrink: 0, gap: 10, zIndex: 10, overflowX: 'auto',
+    }}>
+      {/* Left: Breadcrumbs & Title & Presets */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+        <button onClick={() => window.history.back()}
+          className="btn btn-ghost btn-sm" style={{ padding: '5px 8px' }} title="Back to Dashboard">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          {!isMobile && 'Dashboard'}
+        </button>
+
+        {!isMobile && <span style={{ color: 'var(--text-muted)', fontSize: 13 }}>/</span>}
+
+        <input
+          value={title} onChange={e => onTitleChange(e.target.value)}
+          className="editor-bar-title"
+          style={{
+            background: 'var(--bg-elevated)', border: '1px solid var(--border)', outline: 'none',
+            color: 'var(--text-primary)', fontSize: isMobile ? 12.5 : 13.5,
+            fontWeight: 600, fontFamily: 'var(--font-display)',
+            width: isMobile ? 95 : 135, minWidth: 0,
+            borderRadius: 7, padding: '4px 8px', transition: 'border-color 0.15s',
+          }}
+          placeholder="Resume title…"
+        />
+
+        {!isMobile && <SampleDataPicker onSelectPreset={onSelectPreset} />}
+      </div>
+
+      {/* Center: Overleaf vs Visual Mode Segmented Control */}
+      {!isMobile && (
+        <div style={{
+          display: 'flex', background: 'var(--bg-elevated)',
+          border: '1px solid var(--border)', borderRadius: 8, padding: 3, gap: 2,
+          flexShrink: 0
+        }}>
+          <button
+            onClick={() => onToggleEditorMode('form')}
+            style={{
+              background: editorMode === 'form' ? 'var(--accent)' : 'transparent',
+              color: editorMode === 'form' ? '#fff' : 'var(--text-secondary)',
+              border: 'none', borderRadius: 6, padding: '4px 11px', fontSize: 12, fontWeight: 600,
+              cursor: 'pointer', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 5
+            }}
+          >
+            <span>✏️</span> Visual Form
+          </button>
+          <button
+            onClick={() => onToggleEditorMode('latex')}
+            style={{
+              background: editorMode === 'latex' ? '#10b981' : 'transparent',
+              color: editorMode === 'latex' ? '#fff' : 'var(--text-secondary)',
+              border: 'none', borderRadius: 6, padding: '4px 11px', fontSize: 12, fontWeight: 600,
+              cursor: 'pointer', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 5
+            }}
+          >
+            <span>⌨️</span> Overleaf LaTeX
+          </button>
+        </div>
+      )}
+
+      {/* Right Actions */}
+      <div className="editor-bar-actions" style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+        
+        {/* IRUS AI Trigger */}
+        {!isMobile && <IRUSAssistant resumeData={resumeData} onApplySummary={onApplySummary} />}
+
+        {/* ATS Score Badge */}
+        {!isMobile && (
+          <button
+            onClick={onToggleAts}
+            className="btn btn-ghost btn-sm"
+            style={{
+              background: atsScore >= 80 ? 'rgba(61,224,160,0.12)' : 'rgba(255,107,157,0.12)',
+              color: atsScore >= 80 ? 'var(--success)' : 'var(--accent-2)',
+              border: `1px solid ${atsScore >= 80 ? 'rgba(61,224,160,0.3)' : 'rgba(255,107,157,0.3)'}`,
+              fontSize: 11.5, fontWeight: 700, borderRadius: 8, padding: '4px 9px', flexShrink: 0
+            }}
+            title="Click to view ATS Score breakdown"
+          >
+            🎯 {atsScore}% ATS
+          </button>
+        )}
+
+        {/* Cover letter generator */}
+        {!isMobile && (
+          <button
+            onClick={onOpenCoverLetter}
+            className="btn btn-secondary btn-sm"
+            style={{ fontWeight: 600, padding: '5px 9px', fontSize: 12, flexShrink: 0 }}
+            title="Generate Cover Letter with IRUS AI"
+          >
+            ✉️ Cover Letter
+          </button>
+        )}
+
+        {/* 10-day TTL notice badge */}
+        <button
+          onClick={onShowNotice}
+          className="btn btn-ghost btn-sm"
+          style={{ color: 'var(--warning)', padding: '5px 8px', fontSize: 12, flexShrink: 0 }}
+          title="10-Day Retention Notice"
+        >
+          ⏳ 10d
+        </button>
+
+        {/* Template selector */}
+        {!isMobile && (
+          <select value={template} onChange={e => onTemplateChange(e.target.value)}
+            className="editor-bar-template"
+            style={{
+              background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+              color: 'var(--text-primary)', padding: '5px 8px', borderRadius: 7,
+              fontSize: 12, fontFamily: 'var(--font-body)', cursor: 'pointer', flexShrink: 0
+            }}>
+            <option value="modern">Modern</option>
+            <option value="minimal">Minimal</option>
+            <option value="executive">Executive</option>
+            <option value="technical">Technical</option>
+            <option value="creative">Creative</option>
+          </select>
+        )}
+
+        <ShareResumeButton resumeId={resumeId} isPublic={isPublic} onToggle={onVisibilityToggle} />
+
+        {/* Export TeX Source */}
+        {!isMobile && (
+          <button onClick={onExportTex} className="btn btn-secondary btn-sm" style={{ padding: '5px 8px', fontSize: 12, flexShrink: 0 }} title="Export Overleaf LaTeX (.tex) source">
+            📄 .tex
+          </button>
+        )}
+
+        {!isMobile && (
+          <button onClick={onTogglePreview} className={`btn btn-sm ${previewVisible ? 'btn-primary' : 'btn-secondary'}`} style={{ padding: '5px 9px', fontSize: 12, flexShrink: 0 }}>
+            Preview
+          </button>
+        )}
+
+        <ExportButton title={title} />
+
+        <button onClick={onSave} disabled={saving} className="btn btn-primary btn-sm" style={{ padding: '5px 12px', fontSize: 12, flexShrink: 0 }}>
+          {saving
+            ? <><div className="spinner sm" /> Saving…</>
+            : 'Save'
+          }
+        </button>
+
+        <div style={{ width: 1, height: 18, background: 'var(--border)', margin: '0 2px' }} />
+
+        <button onClick={onLogout} className="btn btn-ghost btn-sm" title="Logout" style={{ color: 'var(--danger)', padding: '5px' }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export default function ResumeEditorPage() {
+  const { id }     = useParams()
+  const navigate   = useNavigate()
+  const location   = useLocation()
+  const { user, logout }   = useAuth()
+
+  const [title,          setTitle]          = useState('Nejamul Haque - Resume')
+  const [template,       setTemplate]       = useState(location.state?.template || 'modern')
+  const [accentColor,    setAccentColor]    = useState('#7c6fff')
+  const [customFont,     setCustomFont]     = useState('"Segoe UI",system-ui,sans-serif')
+  const [editorMode,     setEditorMode]     = useState('form') // 'form' | 'latex'
+  
+  // Default to rich starter profile (Nejamul Haque)
+  const [data,           setData]           = useState(SAMPLE_RESUME_DATA)
+  const [latexCode,      setLatexCode]      = useState(() => resumeToLatex(SAMPLE_RESUME_DATA))
+  
+  const [isPublic,       setIsPublic]       = useState(false)
+  const [createdAt,      setCreatedAt]      = useState(new Date().toISOString())
+  const [loading,        setLoading]        = useState(Boolean(id))
+  const [manualSaving,   setManualSaving]   = useState(false)
+  const [previewVisible, setPreviewVisible] = useState(true)
+  const [mobileTab,      setMobileTab]      = useState('form')
+  const [isMobile,       setIsMobile]       = useState(() => window.innerWidth < 900)
+  const [show10DayNotice, setShow10DayNotice] = useState(false)
+  const [showCoverLetter, setShowCoverLetter] = useState(false)
+  const [showAtsDrawer,   setShowAtsDrawer]   = useState(false)
+  const [zoom,           setZoom]           = useState(0.82)
+
+  // Track viewport resize
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 900)
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  // Show 10-day notice once per session when editing
+  useEffect(() => {
+    const hasSeen = sessionStorage.getItem('proresume_seen_10day_notice')
+    if (!hasSeen) {
+      setShow10DayNotice(true)
+      sessionStorage.setItem('proresume_seen_10day_notice', 'true')
+    }
+  }, [])
+
+  // Load existing resume if editing an ID
+  useEffect(() => {
+    if (!id) return
+    let active = true
+    getResume(id).then(({ data: row, error }) => {
+      if (!active) return
+      if (error || !row) {
+        toast.error('Could not load resume')
+        navigate('/dashboard')
+        return
+      }
+      setTitle(row.title)
+      setTemplate(row.template)
+      const resData = row.data && Object.keys(row.data).length ? row.data : SAMPLE_RESUME_DATA
+      setData(resData)
+      setLatexCode(resumeToLatex(resData))
+      setIsPublic(row.is_public)
+      setCreatedAt(row.created_at || new Date().toISOString())
+      setLoading(false)
+    })
+    return () => { active = false }
+  }, [id, navigate])
+
+  // Save callback for auto-save hook
+  const saveToDb = useCallback(async (currentData, currentTitle, currentTpl) => {
+    if (!user) return
+    if (id) {
+      await updateResume(id, { title: currentTitle, template: currentTpl, data: currentData })
+    } else {
+      const { data: created, error } = await createResume(user.id, currentTitle, currentTpl, currentData)
+      if (!error && created) {
+        navigate(`/resume/${created.id}`, { replace: true })
+      }
+    }
+  }, [id, user, navigate])
+
+  const { status: autoSaveStatus, triggerChange, flushSave } = useAutoSave({
+    saveFn: saveToDb,
+    data,
+    title,
+    template,
+    delay: 2000,
+  })
+
+  // Mutators
+  const handleDataChange = useCallback((newData) => {
+    setData(newData)
+    setLatexCode(resumeToLatex(newData))
+    triggerChange(newData, title, template)
+  }, [title, template, triggerChange])
+
+  const handleTitleChange = (newTitle) => {
+    setTitle(newTitle)
+    triggerChange(data, newTitle, template)
+  }
+
+  const handleTemplateChange = (newTpl) => {
+    setTemplate(newTpl)
+    triggerChange(data, title, newTpl)
+  }
+
+  const handleToggleEditorMode = (mode) => {
+    if (mode === 'latex') {
+      setLatexCode(resumeToLatex(data))
+    }
+    setEditorMode(mode)
+  }
+
+  // Handle LaTeX compilation to live preview
+  const handleLatexCompile = (code) => {
+    setLatexCode(code)
+    const parsed = latexToResume(code, data)
+    setData(parsed)
+    triggerChange(parsed, title, template)
+  }
+
+  const handleApplySummary = (summaryText) => {
+    const updated = {
+      ...data,
+      personal: {
+        ...data.personal,
+        summary: summaryText
+      }
+    }
+    handleDataChange(updated)
+  }
+
+  // Calculate live ATS readiness score
+  const atsScore = useMemo(() => {
+    let score = 0
+    if (data.personal?.fullName) score += 15
+    if (data.personal?.email) score += 10
+    if (data.personal?.phone) score += 5
+    if (data.personal?.summary?.length > 30) score += 15
+    if (data.experience?.length > 0) score += 20
+    if (data.education?.length > 0) score += 15
+    if (data.skills?.technical?.length >= 5) score += 10
+    if (data.projects?.length > 0) score += 10
+    return Math.min(score, 100)
+  }, [data])
+
+  // Manual save
+  const handleManualSave = async () => {
+    setManualSaving(true)
+    try {
+      await flushSave(data, title, template)
+      toast.success('Saved successfully to database!')
+    } catch {
+      toast.error('Save failed')
+    } finally {
+      setManualSaving(false)
+    }
+  }
+
+  // Export JSON backup
+  const handleExportJSON = () => {
+    const blob = new Blob([JSON.stringify({ title, template, data }, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${title.toLowerCase().replace(/\s+/g, '_')}_backup.json`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success('JSON backup downloaded!')
+  }
+
+  // Export Overleaf .tex source
+  const handleExportTex = () => {
+    const code = resumeToLatex(data)
+    downloadTexFile(title, code)
+    toast.success('Overleaf .tex source exported!')
+  }
+
+  // Visibility toggle
+  const handleVisibilityToggle = async (val) => {
+    setIsPublic(val)
+    if (id) {
+      const { error } = await updateResume(id, { is_public: val })
+      if (error) {
+        setIsPublic(!val)
+        toast.error('Failed to update visibility')
+      } else {
+        toast.success(`Resume is now ${val ? 'public' : 'private'}`)
+      }
+    }
+  }
+
+  // 1-Click Role Presets
+  const handleSelectPreset = (presetData) => {
+    handleDataChange(presetData)
+  }
+
+  // Sign out handler
+  const handleLogout = async () => {
+    if (window.confirm('Sign out of ProResume? Make sure you have downloaded your PDF copy!')) {
+      if (logout) await logout()
+      await signOut()
+      toast.success('Signed out')
+      navigate('/')
+    }
+  }
+
+  // Add missing skill from ATS Job Matcher
+  const handleAddMissingSkill = (skill) => {
+    const currTechnical = data.skills?.technical || []
+    if (!currTechnical.includes(skill)) {
+      const updated = {
+        ...data,
+        skills: {
+          ...data.skills,
+          technical: [...currTechnical, skill]
+        }
+      }
+      handleDataChange(updated)
+      toast.success(`Added "${skill}" to Technical Skills!`)
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="full-page-center" style={{ gap: 14, flexDirection: 'column' }}>
+        <div className="spinner lg" />
+        <span style={{ color: 'var(--text-muted)', fontSize: 14 }}>Loading your resume…</span>
+      </div>
+    )
+  }
+
+  return (
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      
+      {/* Auto-Delete Pop-Up Modal */}
+      <AutoDeleteModal
+        isOpen={show10DayNotice}
+        onClose={() => setShow10DayNotice(false)}
+      />
+
+      {/* Cover Letter Generator Modal */}
+      <CoverLetterModal
+        isOpen={showCoverLetter}
+        onClose={() => setShowCoverLetter(false)}
+        resumeData={data}
+      />
+
+      {/* Sticky 10-day retention warning bar */}
+      <AutoDeleteBanner
+        createdAt={createdAt}
+        onDownload={() => {
+          const btn = document.querySelector('[data-export-btn="true"]')
+          if (btn) btn.click()
+        }}
+      />
+
+      {/* Top Bar */}
+      <EditorBar
+        title={title}
+        template={template}
+        onTitleChange={handleTitleChange}
+        onTemplateChange={handleTemplateChange}
+        onSave={handleManualSave}
+        saving={manualSaving || autoSaveStatus === 'saving'}
+        onTogglePreview={() => setPreviewVisible(v => !v)}
+        previewVisible={previewVisible}
+        resumeId={id}
+        isPublic={isPublic}
+        onVisibilityToggle={handleVisibilityToggle}
+        isMobile={isMobile}
+        onLogout={handleLogout}
+        onSelectPreset={handleSelectPreset}
+        onShowNotice={() => setShow10DayNotice(true)}
+        resumeData={data}
+        onApplySummary={handleApplySummary}
+        onExportJSON={handleExportJSON}
+        zoom={zoom}
+        setZoom={setZoom}
+        onOpenCoverLetter={() => setShowCoverLetter(true)}
+        editorMode={editorMode}
+        onToggleEditorMode={handleToggleEditorMode}
+        onExportTex={handleExportTex}
+        onToggleAts={() => setShowAtsDrawer(!showAtsDrawer)}
+        atsScore={atsScore}
+      />
+
+      {/* Mobile tabs */}
+      {isMobile && <EditorMobileTabs activeTab={mobileTab} onChange={setMobileTab} />}
+
+      {/* Main editor area */}
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
+        
+        {/* FORM / LATEX CODE PANEL */}
+        {editorMode === 'form' ? (
+          <div
+            className="editor-form-panel"
+            style={{
+              flex: (isMobile && mobileTab !== 'form') ? 0 : 1,
+              display: (isMobile && mobileTab !== 'form') ? 'none' : 'flex',
+              flexDirection: 'column',
+              overflowY: 'auto',
+              borderRight: (!isMobile && previewVisible) ? '1px solid var(--border)' : 'none',
+              background: 'var(--bg-primary)',
+            }}
+          >
+            {/* ATS Job Matcher Collapsible Widget */}
+            <div style={{ padding: '16px 20px 0' }}>
+              <JobDescriptionMatcher
+                currentSkills={[
+                  ...(data.skills?.technical || []),
+                  ...(data.skills?.soft || []),
+                  ...(data.skills?.languages || [])
+                ]}
+                onAddSkill={handleAddMissingSkill}
+              />
+            </div>
+
+            <ResumeForm data={data} onChange={handleDataChange} />
+          </div>
+        ) : (
+          <div
+            style={{
+              flex: (isMobile && mobileTab !== 'latex') ? 0 : 1,
+              display: (isMobile && mobileTab !== 'latex') ? 'none' : 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              borderRight: (!isMobile && previewVisible) ? '1px solid var(--border)' : 'none',
+            }}
+          >
+            <LatexEditor
+              latexCode={latexCode}
+              onChange={setLatexCode}
+              onCompile={handleLatexCompile}
+              title={title}
+              resumeData={data}
+            />
+          </div>
+        )}
+
+        {/* PREVIEW PANEL */}
+        {(!isMobile ? previewVisible : mobileTab === 'preview') && (
+          <div
+            className="editor-preview-panel"
+            style={{
+              flex: 1.25,
+              background: '#090d14',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              padding: '20px 16px 70px',
+              position: 'relative',
+            }}
+          >
+            {/* Advanced Theme Customizer & Zoom Bar */}
+            <div style={{
+              position: 'sticky', top: 0, zIndex: 20,
+              background: 'rgba(13, 17, 23, 0.94)', backdropFilter: 'blur(16px)',
+              border: '1px solid var(--border)', borderRadius: 14,
+              padding: '8px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              gap: 14, marginBottom: 18, boxShadow: 'var(--shadow-lg)', flexWrap: 'wrap'
+            }}>
+              
+              {/* Color Palette Switcher */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>Palette:</span>
+                <div style={{ display: 'flex', gap: 4 }}>
+                  {ACCENT_PALETTES.map(p => (
+                    <button
+                      key={p.id}
+                      onClick={() => setAccentColor(p.color)}
+                      style={{
+                        width: 20, height: 20, borderRadius: '50%',
+                        background: p.color, border: accentColor === p.color ? '2px solid #fff' : '2px solid transparent',
+                        cursor: 'pointer', boxShadow: accentColor === p.color ? `0 0 8px ${p.color}` : 'none',
+                        transition: 'all 0.15s'
+                      }}
+                      title={p.name}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Font Switcher */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>Font:</span>
+                <select
+                  value={customFont}
+                  onChange={e => setCustomFont(e.target.value)}
+                  style={{
+                    background: 'var(--bg-elevated)', border: '1px solid var(--border)',
+                    color: 'var(--text-primary)', fontSize: 11.5, borderRadius: 6,
+                    padding: '3px 8px', cursor: 'pointer'
+                  }}
+                >
+                  {FONT_OPTIONS.map(f => (
+                    <option key={f.id} value={f.font}>{f.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Zoom Controls */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>Zoom:</span>
+                <button
+                  onClick={() => setZoom(z => Math.max(0.5, Number((z - 0.05).toFixed(2))))}
+                  className="btn btn-ghost btn-xs"
+                  style={{ padding: '2px 6px', fontSize: 12 }}
+                >
+                  −
+                </button>
+                <span style={{ fontSize: 11.5, fontWeight: 700, minWidth: 32, textAlign: 'center' }}>
+                  {Math.round(zoom * 100)}%
+                </span>
+                <button
+                  onClick={() => setZoom(z => Math.min(1.2, Number((z + 0.05).toFixed(2))))}
+                  className="btn btn-ghost btn-xs"
+                  style={{ padding: '2px 6px', fontSize: 12 }}
+                >
+                  +
+                </button>
+                <button
+                  onClick={() => setZoom(0.82)}
+                  className="btn btn-ghost btn-xs"
+                  style={{ fontSize: 10.5, color: 'var(--accent)' }}
+                >
+                  Reset
+                </button>
+              </div>
+
+            </div>
+
+            {/* Document Paper Container */}
+            <div style={{
+              background: '#fff', borderRadius: 4,
+              boxShadow: '0 25px 70px rgba(0, 0, 0, 0.75)',
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              position: 'relative'
+            }}>
+              <ResumePreview
+                data={data}
+                template={template}
+                scale={zoom}
+                accentColor={accentColor}
+                customFont={customFont}
+              />
+            </div>
+
+            {/* Page Count Indicator */}
+            <div style={{
+              marginTop: 18, fontSize: 11.5, color: 'var(--text-muted)',
+              display: 'flex', alignItems: 'center', gap: 6,
+              background: 'rgba(255,255,255,0.04)', padding: '4px 12px', borderRadius: 20
+            }}>
+              <span style={{ color: 'var(--success)' }}>●</span>
+              <span>Page 1 of 1 — Optimal Recruiter Length</span>
+            </div>
+
+          </div>
+        )}
+
+        {/* ATS PANEL (mobile only) */}
+        {isMobile && mobileTab === 'ats' && (
+          <div style={{ flex: 1, padding: 24, overflowY: 'auto', background: 'var(--bg-primary)' }}>
+            <ATSScore data={data} />
+          </div>
+        )}
+      </div>
+
+      {/* Single Native Print Target */}
+      <ResumePrintTarget
+        data={data}
+        template={template}
+        accentColor={accentColor}
+        customFont={customFont}
+      />
+    </div>
+  )
+}

@@ -1,0 +1,4 @@
+{
+  "name": "ProResume Builder",
+  "icons": [{ "src": "/app-icon-512.svg", "sizes": "512x512", "type": "image/svg+xml" }]
+}

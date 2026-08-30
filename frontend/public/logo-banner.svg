@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" width="480" height="80">
+  <defs>
+    <linearGradient id="darkbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="100%" stop-color="#1a1030"/>
+    </linearGradient>
+    <linearGradient id="iconbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#0f3460"/>
+    </linearGradient>
+    <linearGradient id="acc" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7c6fff"/>
+      <stop offset="100%" stop-color="#ff6b9d"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Banner background -->
+  <rect width="480" height="80" rx="16" fill="url(#darkbg)"/>
+  <rect width="480" height="80" rx="16" fill="none"
+        stroke="rgba(124,111,255,0.2)" stroke-width="1"/>
+
+  <!-- Icon mark (small) -->
+  <rect x="14" y="14" width="52" height="52" rx="12" fill="url(#iconbg)"/>
+  <!-- doc -->
+  <rect x="25" y="21" width="30" height="37" rx="3"
+        fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.25)" stroke-width="0.8"/>
+  <path d="M46 21 L55 30 L46 30 Z" fill="rgba(255,255,255,0.18)"/>
+  <rect x="28" y="24" width="13" height="2.5" rx="1.2" fill="url(#acc)"/>
+  <rect x="28" y="30" width="19" height="2"   rx="1"   fill="rgba(255,255,255,0.65)"/>
+  <rect x="28" y="34" width="16" height="2"   rx="1"   fill="rgba(255,255,255,0.45)"/>
+  <rect x="28" y="38" width="18" height="2"   rx="1"   fill="rgba(255,255,255,0.45)"/>
+  <rect x="28" y="44" width="10" height="2"   rx="1"   fill="url(#acc)" opacity="0.8"/>
+  <rect x="28" y="48" width="19" height="2"   rx="1"   fill="rgba(255,255,255,0.50)"/>
+
+  <!-- Wordmark — "Pro" white, "Resume" gradient -->
+  <text x="80" y="48"
+        font-family="'Syne', 'Arial Black', sans-serif"
+        font-size="30" font-weight="800"
+        fill="white" letter-spacing="-1">Pro</text>
+  <text x="134" y="48"
+        font-family="'Syne', 'Arial Black', sans-serif"
+        font-size="30" font-weight="800"
+        fill="url(#acc)" letter-spacing="-1">Resume</text>
+
+  <!-- Tagline -->
+  <text x="80" y="63"
+        font-family="'DM Sans', Arial, sans-serif"
+        font-size="11" font-weight="400"
+        fill="rgba(255,255,255,0.38)">Build resumes that get you hired</text>
+
+  <!-- Decorative dots right side -->
+  <circle cx="446" cy="40" r="4" fill="url(#acc)" opacity="0.65"/>
+  <circle cx="458" cy="40" r="3" fill="url(#acc)" opacity="0.40"/>
+  <circle cx="468" cy="40" r="2" fill="url(#acc)" opacity="0.22"/>
+</svg>
