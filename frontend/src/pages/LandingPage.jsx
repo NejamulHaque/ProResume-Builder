@@ -84,9 +84,9 @@ export default function LandingPage() {
   const isAdmin = user?.email === 'nejamulhaque.works@gmail.com' || user?.email === 'nejamulhaqueruhaan86@gmail.com'
 
   useSeo({
-    title: 'Free ATS Resume Builder & Overleaf LaTeX Engine',
+    title: 'ProResume Builder',
     description: 'Build FAANG-grade ATS resumes with Overleaf LaTeX compilation, IRUS AI bullet enhancements, 5 modern templates, and 10-day ephemeral cloud privacy. 100% Free.',
-    canonical: 'https://github.com/NejamulHaque/ProResume-Builder'
+    canonical: 'https://proresume-six.vercel.app/'
   })
 
   const liveMockData = useMemo(() => {

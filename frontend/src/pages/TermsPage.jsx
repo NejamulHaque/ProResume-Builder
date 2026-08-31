@@ -5,7 +5,7 @@ export default function TermsPage() {
   useSeo({
     title: 'Terms of Service',
     description: 'ProResume Builder Terms of Service: Open-source MIT usage guidelines, acceptable use, and user responsibilities.',
-    canonical: 'https://github.com/NejamulHaque/ProResume-Builder'
+    canonical: 'https://proresume-six.vercel.app/terms'
   })
 
   return (

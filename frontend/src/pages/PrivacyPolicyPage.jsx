@@ -5,7 +5,7 @@ export default function PrivacyPolicyPage() {
   useSeo({
     title: 'Privacy Policy',
     description: 'ProResume Builder Privacy Policy: Learn how our 10-day ephemeral retention, zero-tracking, and open-source architecture protect your career data.',
-    canonical: 'https://github.com/NejamulHaque/ProResume-Builder'
+    canonical: 'https://proresume-six.vercel.app/privacy'
   })
 
   return (

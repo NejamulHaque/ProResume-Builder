@@ -5,9 +5,20 @@ import { useEffect } from 'react'
  */
 export function useSeo({ title, description, canonical }) {
   useEffect(() => {
-    if (title) {
-      document.title = `${title} | ProResume Builder`
-    }
+    const fullTitle = !title || title === 'ProResume Builder' 
+      ? 'ProResume Builder' 
+      : `${title} - ProResume Builder`
+    
+    document.title = fullTitle
+
+    let metaTitle = document.querySelector('meta[name="title"]')
+    if (metaTitle) metaTitle.setAttribute('content', fullTitle)
+
+    let ogTitle = document.querySelector('meta[property="og:title"]')
+    if (ogTitle) ogTitle.setAttribute('content', fullTitle)
+
+    let twTitle = document.querySelector('meta[name="twitter:title"]')
+    if (twTitle) twTitle.setAttribute('content', fullTitle)
 
     if (description) {
       let metaDesc = document.querySelector('meta[name="description"]')
