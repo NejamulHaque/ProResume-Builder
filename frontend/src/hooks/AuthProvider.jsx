@@ -3,9 +3,30 @@ import { supabase, getProfile, getSession, signInWithEmail, signUpWithEmail, isL
 import AuthContext from './AuthContext.jsx'
 
 export function AuthProvider({ children }) {
-  const [user,    setUser]    = useState(null)
+  const [user, setUser] = useState(() => {
+    try {
+      const raw = localStorage.getItem('proresume_local_user')
+      if (raw) return JSON.parse(raw)
+      const sbKey = Object.keys(localStorage).find(k => k.startsWith('sb-') && k.endsWith('-auth-token'))
+      if (sbKey) {
+        const parsed = JSON.parse(localStorage.getItem(sbKey))
+        return parsed?.user || null
+      }
+      return null
+    } catch {
+      return null
+    }
+  })
   const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(() => {
+    try {
+      const hasLocal = localStorage.getItem('proresume_local_user')
+      const hasSb = Object.keys(localStorage).some(k => k.startsWith('sb-') && k.endsWith('-auth-token'))
+      return !hasLocal && !hasSb
+    } catch {
+      return true
+    }
+  })
 
   /** Fetch profile row and cache it */
   const refreshProfile = useCallback(async (userId) => {
@@ -23,10 +44,10 @@ export function AuthProvider({ children }) {
       }
     }
 
-    // Safety timeout: dismiss loader after 1.5s
+    // Safety timeout: dismiss loader after 800ms
     const timer = setTimeout(() => {
       markLoaded()
-    }, 1500)
+    }, 800)
 
     // Hydrate from existing session or local storage
     getSession()

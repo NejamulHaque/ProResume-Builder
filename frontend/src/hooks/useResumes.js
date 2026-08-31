@@ -13,20 +13,38 @@ import {
  * Falls back to localStorage when Supabase is unavailable (demo mode).
  */
 export function useResumes(userId) {
-  const [resumes,  setResumes]  = useState([])
-  const [loading,  setLoading]  = useState(true)
-  const [error,    setError]    = useState(null)
-
-  const STORAGE_KEY = `resumes_${userId}`
+  const STORAGE_KEY = userId ? `resumes_${userId}` : 'resumes_anonymous'
 
   // ─── Load from localStorage fallback ──────────────────────────────────
   const loadFromStorage = useCallback(() => {
     try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
+      const raw = localStorage.getItem(STORAGE_KEY)
+      return raw ? JSON.parse(raw) : []
     } catch {
       return []
     }
   }, [STORAGE_KEY])
+
+  // Instant SWR cache hydration (0ms render on refresh)
+  const [resumes, setResumes] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      return raw ? JSON.parse(raw) : []
+    } catch {
+      return []
+    }
+  })
+
+  const [loading, setLoading] = useState(() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      return !raw || JSON.parse(raw).length === 0
+    } catch {
+      return true
+    }
+  })
+
+  const [error, setError] = useState(null)
 
   const saveToStorage = useCallback((data) => {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)) } catch {}
@@ -34,20 +52,36 @@ export function useResumes(userId) {
 
   // ─── Fetch ─────────────────────────────────────────────────────────────
   const fetchResumes = useCallback(async () => {
-    if (!userId) return
-    setLoading(true)
-    setError(null)
+    if (!userId) {
+      setLoading(false)
+      return
+    }
+
+    // Hydrate immediately from cache so UI is instantaneous
+    const cached = loadFromStorage()
+    if (cached.length > 0) {
+      setResumes(cached)
+      setLoading(false)
+    }
+
     try {
-      const { data, error: err } = await getResumes(userId)
+      // Fast timeout race so slow cloud database cold-starts never hang the UI
+      const fetchPromise = getResumes(userId)
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Fetch timeout')), 5000)
+      )
+
+      const { data, error: err } = await Promise.race([fetchPromise, timeoutPromise])
       if (err) throw err
       const list = data || []
       setResumes(list)
       saveToStorage(list)
     } catch (e) {
       setError(e.message)
-      // Use cached data on error
-      const cached = loadFromStorage()
-      if (cached.length) setResumes(cached)
+      const cachedFallback = loadFromStorage()
+      if (cachedFallback.length > 0) {
+        setResumes(cachedFallback)
+      }
     } finally {
       setLoading(false)
     }
