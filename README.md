@@ -1,4 +1,4 @@
-# 📄 ProResume Builder — AI Resume Architect
+# 📄 AI Resume Architect
 
 [![GitHub stars](https://img.shields.io/github/stars/NejamulHaque/ProResume-Builder?style=social)](https://github.com/NejamulHaque/ProResume-Builder)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -8,7 +8,7 @@
 [![Overleaf](https://img.shields.io/badge/LaTeX-Overleaf_Engine-10b981.svg)](https://overleaf.com)
 [![IRUS AI](https://img.shields.io/badge/AI_Engine-IRUS_AI-7c6fff.svg)](https://irus-ai.onrender.com)
 
-> **ProResume Builder** is a privacy-first, professional resume engineering suite featuring **Overleaf-grade LaTeX compilation**, **IRUS AI smart rewriting**, **Neon serverless PostgreSQL** storage, and automated **10-day ephemeral privacy auto-purge**.
+> **ProResume Architect** is a privacy-first, professional resume engineering suite featuring **Overleaf-grade LaTeX compilation**, **IRUS AI smart rewriting**, **Neon serverless PostgreSQL** storage, and automated **10-day ephemeral privacy auto-purge**.
 
 ---
 
