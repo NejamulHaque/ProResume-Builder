@@ -84,8 +84,8 @@ export default function LandingPage() {
   const isAdmin = user?.email === 'nejamulhaque.works@gmail.com' || user?.email === 'nejamulhaqueruhaan86@gmail.com'
 
   useSeo({
-    title: 'ProResume Builder',
-    description: 'Build FAANG-grade ATS resumes with Overleaf LaTeX compilation, IRUS AI bullet enhancements, 5 modern templates, and 10-day ephemeral cloud privacy. 100% Free.',
+    title: 'ATS Resume Architect',
+    description: 'Build FAANG-grade ATS resumes with Overleaf LaTeX compilation, IRUS AI bullet enhancements, modern templates, and 10-day ephemeral cloud privacy. 100% Free.',
     canonical: 'https://proresume-six.vercel.app/'
   })
 
@@ -160,7 +160,7 @@ export default function LandingPage() {
             </svg>
           </div>
           <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 21, letterSpacing: -0.5 }}>
-            Pro<span className="gradient-text">Resume</span>
+            ATS<span className="gradient-text">Resume</span>
           </span>
         </Link>
 
@@ -307,7 +307,7 @@ export default function LandingPage() {
               fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.03em',
               marginBottom: 20, maxWidth: 960, margin: '0 auto 20px'
             }}>
-              The Smartest AI Resume &amp; Overleaf <span className="gradient-text">LaTeX Studio</span>.
+              ATS Resume Architect &amp; Overleaf <span className="gradient-text">LaTeX Studio</span>.
             </h1>
 
             <p style={{
@@ -796,7 +796,7 @@ export default function LandingPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                 <span>📄</span>
                 <span style={{ fontWeight: 800, fontSize: 18, fontFamily: 'var(--font-display)' }}>
-                  Pro<span className="gradient-text">Resume</span>
+                  ATS<span className="gradient-text">Resume</span>
                 </span>
               </div>
               <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
@@ -839,7 +839,7 @@ export default function LandingPage() {
           </div>
 
           <div style={{ textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: 24, fontSize: 12.5, color: 'var(--text-muted)' }}>
-            © 2026 ProResume Builder. Built with ❤️ &amp; IRUS AI by <strong>Nejamul Haque</strong>.
+            © 2026 ATS Resume Architect. Built with ❤️ &amp; IRUS AI by <strong>Nejamul Haque</strong>.
           </div>
         </footer>
 
