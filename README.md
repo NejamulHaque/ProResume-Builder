@@ -1,4 +1,4 @@
-# 📄 ProResume Builder — AI Resume & Overleaf LaTeX Engine
+# 📄 ProResume Builder — AI Resume Architect
 
 [![GitHub stars](https://img.shields.io/github/stars/NejamulHaque/ProResume-Builder?style=social)](https://github.com/NejamulHaque/ProResume-Builder)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
