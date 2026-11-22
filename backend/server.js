@@ -53,6 +53,9 @@ const writeLimiter = rateLimit({
   message:         { error: 'Write rate limit exceeded — try again shortly.' },
 })
 
+// ─── Health check (exempt from rate limits for uptime monitors) ─────────────
+app.use('/health', healthRoutes)
+
 app.use(generalLimiter)
 
 // ─── Request logger (dev only) ─────────────────────────────────────────────
@@ -64,7 +67,6 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // ─── Routes ───────────────────────────────────────────────────────────────
-app.use('/health',          healthRoutes)
 app.use('/api/resumes',     writeLimiter, resumeRoutes)
 app.use('/api/profiles',    profileRoutes)
 app.use('/api/analytics',   analyticsRoutes)
@@ -78,7 +80,7 @@ app.use((_req, res) => {
 // ─── Global error handler (must be last) ──────────────────────────────────
 app.use(errorHandler)
 
-const server = app.listen(PORT, async () => {
+const server = app.listen(PORT, '0.0.0.0', async () => {
   console.log('\n  ╔════════════════════════════════════════════════════╗')
   console.log(`  ║   ProResume API    →  http://localhost:${PORT}        ║`)
   console.log(`  ║   Environment     →  ${(process.env.NODE_ENV ?? 'development').padEnd(14)}        ║`)

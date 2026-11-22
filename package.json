@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ProResume Builder — Full-stack resume builder with Supabase auth",
   "private": true,
+  "type": "module",
   "scripts": {
     "install:all": "npm install && npm install --prefix frontend && npm install --prefix backend",
     "dev": "concurrently -n FRONT,BACK -c cyan,magenta \"npm run dev --prefix frontend\" \"npm run dev --prefix backend\"",
@@ -12,6 +13,8 @@
     "start:backend": "npm run start --prefix backend"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "autocannon": "^9.0.0",
+    "concurrently": "^8.2.2",
+    "lighthouse": "^13.6.0"
   }
 }

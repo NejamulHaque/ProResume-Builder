@@ -1,0 +1,6 @@
+export const PORTFOLIO_URL = 'https://nejamulhaque.vercel.app/'
+export const GITHUB_REPO_URL = 'https://github.com/NejamulHaque/ProResume-Builder'
+export const IRUS_AI_URL = 'https://irus-ai.onrender.com'
+export const APP_CANONICAL_URL = 'https://proresume-six.vercel.app/'
+export const CONTACT_EMAIL = 'nejamulhaqueruhaan86@gmail.com'
+export const ADMIN_EMAIL = 'nejamulhaque.works@gmail.com'

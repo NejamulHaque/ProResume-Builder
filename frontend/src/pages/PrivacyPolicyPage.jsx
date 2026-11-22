@@ -1,98 +1,167 @@
 import { Link } from 'react-router-dom'
 import { useSeo } from '../lib/seo.js'
+import { PORTFOLIO_URL, CONTACT_EMAIL, GITHUB_REPO_URL } from '../lib/constants.js'
 
 export default function PrivacyPolicyPage() {
   useSeo({
     title: 'Privacy Policy',
-    description: 'ProResume Builder Privacy Policy: Learn how our 10-day ephemeral retention, zero-tracking, and open-source architecture protect your career data.',
+    description: 'ProResume Builder Privacy Policy: Learn how our 10-day ephemeral retention, zero tracking, and open-source architecture protect your career data.',
     canonical: 'https://proresume-six.vercel.app/privacy'
   })
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
-      {/* Header */}
+      {/* Apple-style Frosted Header */}
       <header style={{
-        height: 64, borderBottom: '1px solid var(--border)', background: 'rgba(15,15,24,0.92)',
-        backdropFilter: 'blur(16px)', padding: '0 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        position: 'sticky', top: 0, zIndex: 50
+        height: 60,
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(0, 0, 0, 0.72)',
+        backdropFilter: 'saturate(180%) blur(20px)',
+        WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+        padding: '0 28px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100
       }}>
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none', color: 'var(--text-primary)', fontWeight: 800, fontSize: 18 }}>
-          <span>📄</span> Pro<span className="gradient-text">Resume</span>
+        <Link to="/" style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          textDecoration: 'none',
+          color: 'var(--text-primary)',
+          fontWeight: 600,
+          fontSize: 16,
+          letterSpacing: '-0.02em'
+        }}>
+          <div style={{
+            width: 28,
+            height: 28,
+            borderRadius: 7,
+            background: 'var(--text-primary)',
+            color: '#000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 14,
+            fontWeight: 800
+          }}>
+            P
+          </div>
+          <span>ProResume</span>
         </Link>
-        <div style={{ display: 'flex', gap: 12 }}>
-          <Link to="/" className="btn btn-ghost btn-sm">← Back to Home</Link>
-          <Link to="/auth" className="btn btn-primary btn-sm">Start Building Free 🚀</Link>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+          <Link to="/" className="btn btn-ghost btn-sm">
+            Overview
+          </Link>
+          <Link to="/auth" className="btn btn-primary btn-sm">
+            Start Free
+          </Link>
         </div>
       </header>
 
       {/* Content Container */}
-      <main style={{ maxWidth: 840, margin: '0 auto', padding: '60px 24px 100px', lineHeight: 1.8 }}>
-        <div style={{ marginBottom: 36 }}>
-          <span className="badge badge-accent" style={{ marginBottom: 12, display: 'inline-block' }}>
-            🔒 Privacy First Architecture
+      <main style={{ maxWidth: 760, margin: '0 auto', padding: '60px 24px 100px', lineHeight: 1.75 }}>
+        <div style={{ marginBottom: 44, borderBottom: '1px solid var(--border)', paddingBottom: 28 }}>
+          <span style={{
+            display: 'inline-block',
+            fontSize: 11,
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            color: 'var(--accent)',
+            marginBottom: 12
+          }}>
+            Privacy First Architecture
           </span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, marginBottom: 8 }}>
+          <h1 style={{
+            fontFamily: 'var(--font-display)',
+            fontSize: 'clamp(32px, 4.5vw, 48px)',
+            fontWeight: 700,
+            letterSpacing: '-0.03em',
+            marginBottom: 12
+          }}>
             Privacy Policy
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>
-            Last updated: August 30, 2026 • Created by Nejamul Haque
+          <p style={{ color: 'var(--text-secondary)', fontSize: 14, letterSpacing: '-0.01em' }}>
+            Effective as of 2026 • Created by{' '}
+            <a
+              href={PORTFOLIO_URL}
+              target="_blank"
+              rel="noreferrer"
+              style={{ color: 'var(--text-primary)', textDecoration: 'underline' }}
+            >
+              Nejamul Haque
+            </a>.
           </p>
         </div>
 
-        <section style={{ display: 'flex', flexDirection: 'column', gap: 28, fontSize: 14.5, color: 'var(--text-secondary)' }}>
+        <section style={{ display: 'flex', flexDirection: 'column', gap: 36, fontSize: 15, color: 'var(--text-secondary)' }}>
           <div>
-            <h2 style={{ color: 'var(--text-primary)', fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
-              1. Our Core Commitment: Ephemeral 10-Day Retention
+            <h2 style={{ color: 'var(--text-primary)', fontSize: 19, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 10 }}>
+              1. Our Foundational Principle: Privacy by Default
             </h2>
             <p>
-              At <strong>ProResume Builder</strong>, we believe your career history and personal contact details belong solely to you. Unlike traditional platforms that monetize or permanently store candidate resumes, our database operates on a strict <strong>10-Day Ephemeral Retention Rule</strong>.
-            </p>
-            <p style={{ background: 'rgba(124,111,255,0.08)', padding: '12px 16px', borderRadius: 8, borderLeft: '3px solid var(--accent)' }}>
-              ⏱️ <strong>Automated Database Auto-Purge:</strong> An automated background worker runs every 30 minutes, permanently deleting resumes older than 10 days from our Neon PostgreSQL database. Download your high-DPI PDF or LaTeX source for permanent personal backup.
+              Your professional journey, personal phone numbers, and career achievements belong exclusively to you. ProResume does not monetize user data, display behavioral advertisements, or sell contact rosters to recruitment brokers.
             </p>
           </div>
 
           <div>
-            <h2 style={{ color: 'var(--text-primary)', fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
-              2. Information We Collect & How It Is Used
+            <h2 style={{ color: 'var(--text-primary)', fontSize: 19, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 10 }}>
+              2. 10-Day Ephemeral Cloud Retention
             </h2>
-            <p>We collect only the minimal information required to generate and render your resume:</p>
-            <ul>
-              <li><strong>Resume Content:</strong> Contact information, work experience, education, skills, and projects you choose to enter.</li>
-              <li><strong>Authentication Data:</strong> When signing in via email or Google, we store your email address and profile name solely to authenticate your session.</li>
-              <li><strong>Local Storage:</strong> In offline or sandboxed mode, your draft data is saved locally on your device's browser (localStorage / IndexedDB) without transmitting across the network.</li>
+            <p>
+              Resumes persisted to our cloud database automatically expire after 10 days. An automated background cleanup worker systematically purges records past their TTL (Time to Live). This ensures zero long-term exposure of your career profile in the event of third-party compromises.
+            </p>
+          </div>
+
+          <div>
+            <h2 style={{ color: 'var(--text-primary)', fontSize: 19, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 10 }}>
+              3. Data We Process
+            </h2>
+            <p>
+              We process only the exact fields required to generate your CV:
+            </p>
+            <ul style={{ paddingLeft: 20, marginTop: 8, display: 'flex', flexDirection: 'column', gap: 6 }}>
+              <li><strong>Resume Content:</strong> Contact information, employment history, degrees, and skills you explicitly provide.</li>
+              <li><strong>Session Identifiers:</strong> Authentication session tokens to authenticate you securely via email or OAuth.</li>
+              <li><strong>Device Local Storage:</strong> Draft changes are cached locally on your browser for instant responsiveness and offline durability.</li>
             </ul>
           </div>
 
           <div>
-            <h2 style={{ color: 'var(--text-primary)', fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
-              3. AI Processing & IRUS AI Integration
+            <h2 style={{ color: 'var(--text-primary)', fontSize: 19, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 10 }}>
+              4. IRUS AI &amp; DevSecOps Leak Guard
             </h2>
             <p>
-              When utilizing our IRUS AI assistant for summary generation or bullet point enhancement, your text is processed in-memory to generate suggestions. We do not use your resume content to train public AI models, nor do we sell your data to third-party advertisers or recruitment brokers.
+              When using the integrated IRUS AI bullet optimizer, your input text is processed transiently to recommend quantified action verbs. Furthermore, our built-in DevSecOps scanner executes pre-flight checks on your device to alert you if secret keys (such as AWS tokens, SSH keys, or private IP addresses) are inadvertently included in your resume.
             </p>
           </div>
 
           <div>
-            <h2 style={{ color: 'var(--text-primary)', fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
-              4. Cookies & Analytics
+            <h2 style={{ color: 'var(--text-primary)', fontSize: 19, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 10 }}>
+              5. Open-Source Transparency &amp; Contact
             </h2>
             <p>
-              We use essential cookies strictly for maintaining user authentication state and UI preferences (such as dark mode and palette selections). We do not deploy intrusive third-party cross-site ad trackers.
+              You can verify all security, auto-delete, and storage logic in our open repository on{' '}
+              <a
+                href={GITHUB_REPO_URL}
+                target="_blank"
+                rel="noreferrer"
+                style={{ color: 'var(--accent)', textDecoration: 'none' }}
+              >
+                GitHub
+              </a>.
             </p>
-          </div>
-
-          <div>
-            <h2 style={{ color: 'var(--text-primary)', fontSize: 20, fontWeight: 700, marginBottom: 8 }}>
-              5. Open-Source Transparency & Contact
-            </h2>
-            <p>
-              ProResume Builder is open-source under the MIT license. You can inspect the entire codebase, security rules, and auto-delete worker on our <a href="https://github.com/NejamulHaque/ProResume-Builder" target="_blank" rel="noreferrer" style={{ color: 'var(--accent)' }}>GitHub Repository</a>.
-            </p>
-            <p>
-              For privacy inquiries or immediate data deletion requests, contact the developer directly:
+            <p style={{ marginTop: 12 }}>
+              For data deletion requests or inquiries, reach out directly:
               <br />
-              <strong>Nejamul Haque</strong> — <a href="mailto:nejamulhaqueruhaan86@gmail.com" style={{ color: 'var(--accent)' }}>nejamulhaqueruhaan86@gmail.com</a>
+              <strong>Nejamul Haque</strong> —{' '}
+              <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'var(--accent)', textDecoration: 'none' }}>
+                {CONTACT_EMAIL}
+              </a>
             </p>
           </div>
         </section>

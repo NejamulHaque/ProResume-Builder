@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useSeo } from '../lib/seo.js'
+import { PORTFOLIO_URL } from '../lib/constants.js'
 
 export default function NotFoundPage() {
   useSeo({
@@ -9,49 +10,73 @@ export default function NotFoundPage() {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex', flexDirection: 'column',
-      alignItems: 'center', justifyContent: 'center',
-      background: 'var(--bg-primary)', padding: 24, textAlign: 'center',
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'var(--bg-primary)',
+      padding: '40px 24px',
+      textAlign: 'center',
       color: 'var(--text-primary)'
     }}>
       <div style={{
-        width: 90, height: 90, borderRadius: 24,
-        background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 42, marginBottom: 24, boxShadow: 'var(--shadow-accent)',
-        animation: 'pulse 2s infinite'
+        width: 72,
+        height: 72,
+        borderRadius: 20,
+        background: 'rgba(255, 255, 255, 0.05)',
+        border: '1px solid var(--border-light)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 32,
+        marginBottom: 28,
+        backdropFilter: 'blur(20px)'
       }}>
-        🔍
+        404
       </div>
 
       <h1 style={{
-        fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 6vw, 64px)',
-        fontWeight: 800, margin: '0 0 12px',
-        background: 'linear-gradient(135deg, #fff 30%, var(--accent) 100%)',
-        WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
+        fontFamily: 'var(--font-display)',
+        fontSize: 'clamp(32px, 5vw, 56px)',
+        fontWeight: 700,
+        letterSpacing: '-0.03em',
+        margin: '0 0 16px',
+        color: 'var(--text-primary)'
       }}>
-        404
+        Page Not Found
       </h1>
 
-      <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, margin: '0 0 12px' }}>
-        Page Not Found
-      </h2>
-
-      <p style={{ color: 'var(--text-muted)', fontSize: 14.5, maxWidth: 460, margin: '0 auto 28px', lineHeight: 1.6 }}>
-        The link you followed may be broken, expired, or the page may have been moved. Return to the home page or create a fresh resume below.
+      <p style={{
+        color: 'var(--text-secondary)',
+        fontSize: 16,
+        maxWidth: 480,
+        margin: '0 auto 36px',
+        lineHeight: 1.6,
+        letterSpacing: '-0.01em'
+      }}>
+        The page you are looking for doesn't exist, has been removed, or is temporarily unavailable.
       </p>
 
-      <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
         <Link to="/" className="btn btn-secondary btn-lg">
-          ← Return to Home
+          ← Return to Overview
         </Link>
         <Link to="/resume/new" className="btn btn-primary btn-lg">
-          Create New Resume 🚀
+          Create a Resume
         </Link>
       </div>
 
-      <div style={{ marginTop: 40, fontSize: 12, color: 'var(--text-muted)' }}>
-        ProResume Builder — Open-Source Project by <strong>Nejamul Haque</strong>
+      <div style={{ marginTop: 60, fontSize: 13, color: 'var(--text-muted)' }}>
+        ProResume Builder — Created with care by{' '}
+        <a
+          href={PORTFOLIO_URL}
+          target="_blank"
+          rel="noreferrer"
+          style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}
+        >
+          Nejamul Haque
+        </a>
       </div>
     </div>
   )

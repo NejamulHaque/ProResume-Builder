@@ -82,8 +82,8 @@ const ModernTemplate = memo(({ data, accentColor, customFont, showQrCode }) => {
                       <div style={{ fontSize:12.5,color:acc,fontWeight:600 }}>{exp.company}</div>
                     </div>
                     <div style={{ textAlign:'right',flexShrink:0 }}>
-                      <div style={{ fontSize:11,color:'#888',fontWeight:500 }}>{fmtRange(exp.startDate,exp.endDate,exp.current)}</div>
-                      {exp.location && <div style={{ fontSize:10.5,color:'#aaa' }}>{exp.location}</div>}
+                      <div style={{ fontSize:11,color:'#555',fontWeight:500 }}>{fmtRange(exp.startDate,exp.endDate,exp.current)}</div>
+                      {exp.location && <div style={{ fontSize:10.5,color:'#666' }}>{exp.location}</div>}
                     </div>
                   </div>
                   <ul style={{ paddingLeft:15,margin:'5px 0 0' }}>
@@ -125,8 +125,8 @@ const ModernTemplate = memo(({ data, accentColor, customFont, showQrCode }) => {
                 <div key={edu.id} style={{ marginBottom:14 }}>
                   <div style={{ fontWeight:700,fontSize:12.5 }}>{edu.degree}</div>
                   <div style={{ fontSize:12,color:acc,fontWeight:600 }}>{edu.institution}</div>
-                  <div style={{ fontSize:11,color:'#888',marginTop:2 }}>{fmtRange(edu.startDate,edu.endDate)}{edu.location && ` · ${edu.location}`}</div>
-                  {edu.gpa && <div style={{ fontSize:11,color:'#666',marginTop:1 }}>GPA: {edu.gpa}{edu.honors && ` · ${edu.honors}`}</div>}
+                  <div style={{ fontSize:11,color:'#555',marginTop:2 }}>{fmtRange(edu.startDate,edu.endDate)}{edu.location && ` · ${edu.location}`}</div>
+                  {edu.gpa && <div style={{ fontSize:11,color:'#555',marginTop:1 }}>GPA: {edu.gpa}{edu.honors && ` · ${edu.honors}`}</div>}
                 </div>
               ))}
             </div>
@@ -136,24 +136,24 @@ const ModernTemplate = memo(({ data, accentColor, customFont, showQrCode }) => {
               <SecTitle title="Skills" accent={acc} />
               {data.skills.technical?.length > 0 && (
                 <div style={{ marginBottom:10 }}>
-                  <div style={{ fontSize:10.5,fontWeight:700,color:'#888',textTransform:'uppercase',letterSpacing:'0.7px',marginBottom:5 }}>Technical</div>
-                  <div style={{ display:'flex',flexWrap:'wrap',gap:4 }}>
-                    {data.skills.technical.map((s) => <span key={s} style={{ fontSize:11,padding:'3px 8px',borderRadius:4,background:`${acc}12`,color:acc,border:`1px solid ${acc}25` }}>{s}</span>)}
+                  <div style={{ fontSize:10.5,fontWeight:700,color:'#555',textTransform:'uppercase',letterSpacing:'0.7px',marginBottom:5 }}>Technical</div>
+                  <div style={{ display: 'flex',flexWrap:'wrap',gap:4 }}>
+                    {data.skills.technical.map((s) => <span key={s} style={{ fontSize:11,padding:'3px 8px',borderRadius:4,background:'#f0f4ff',color:'#0052cc',border:'1px solid #cce0ff' }}>{s}</span>)}
                   </div>
                 </div>
               )}
               {data.skills.soft?.length > 0 && (
                 <div style={{ marginBottom:10 }}>
-                  <div style={{ fontSize:10.5,fontWeight:700,color:'#888',textTransform:'uppercase',letterSpacing:'0.7px',marginBottom:5 }}>Soft Skills</div>
-                  <div style={{ display:'flex',flexWrap:'wrap',gap:4 }}>
-                    {data.skills.soft.map((s) => <span key={s} style={{ fontSize:11,padding:'3px 8px',borderRadius:4,background:'#f5f5f8',color:'#555' }}>{s}</span>)}
+                  <div style={{ fontSize:10.5,fontWeight:700,color:'#555',textTransform:'uppercase',letterSpacing:'0.7px',marginBottom:5 }}>Soft Skills</div>
+                  <div style={{ display: 'flex',flexWrap:'wrap',gap:4 }}>
+                    {data.skills.soft.map((s) => <span key={s} style={{ fontSize:11,padding:'3px 8px',borderRadius:4,background:'#f5f5f8',color:'#333' }}>{s}</span>)}
                   </div>
                 </div>
               )}
               {data.skills.languages?.length > 0 && (
                 <div>
-                  <div style={{ fontSize:10.5,fontWeight:700,color:'#888',textTransform:'uppercase',letterSpacing:'0.7px',marginBottom:5 }}>Languages</div>
-                  {data.skills.languages.map((l) => <div key={l} style={{ fontSize:11.5,color:'#555',marginBottom:3 }}>• {l}</div>)}
+                  <div style={{ fontSize:10.5,fontWeight:700,color:'#555',textTransform:'uppercase',letterSpacing:'0.7px',marginBottom:5 }}>Languages</div>
+                  {data.skills.languages.map((l) => <div key={l} style={{ fontSize:11.5,color:'#444',marginBottom:3 }}>• {l}</div>)}
                 </div>
               )}
             </div>

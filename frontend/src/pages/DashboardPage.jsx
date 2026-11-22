@@ -9,21 +9,42 @@ import ResumeCard      from '../components/dashboard/ResumeCard.jsx'
 import TemplateGrid    from '../components/dashboard/TemplateGrid.jsx'
 import DeveloperCard   from '../components/developer/DeveloperCard.jsx'
 import { StatsGridSkeleton, ResumeGridSkeleton } from '../components/ui/Skeletons.jsx'
+import { PORTFOLIO_URL } from '../lib/constants.js'
 
 function EmptyResumes({ onCreate }) {
   return (
     <div style={{
-      textAlign: 'center', padding: '56px 24px',
-      background: 'var(--bg-card)', borderRadius: 'var(--radius-xl)',
-      border: '2px dashed var(--border)',
+      textAlign: 'center',
+      padding: '64px 24px',
+      background: 'var(--bg-card)',
+      borderRadius: 'var(--radius-xl)',
+      border: '1px dashed var(--border-light)',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center'
     }}>
-      <div style={{ fontSize: 44, marginBottom: 14 }}>📝</div>
-      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 20, marginBottom: 8 }}>No resumes yet</h3>
-      <p style={{ color: 'var(--text-muted)', fontSize: 13.5, marginBottom: 24 }}>
-        Create your first professional resume in minutes
+      <div style={{
+        width: 56,
+        height: 56,
+        borderRadius: '50%',
+        background: 'rgba(255, 255, 255, 0.05)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: 24,
+        marginBottom: 16
+      }}>
+        📄
+      </div>
+      <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, letterSpacing: '-0.02em', marginBottom: 8 }}>
+        No resumes created yet
+      </h3>
+      <p style={{ color: 'var(--text-secondary)', fontSize: 14, maxWidth: 380, marginBottom: 28, lineHeight: 1.5 }}>
+        Build a recruiter-grade ATS resume or start with an Overleaf LaTeX template in minutes.
       </p>
       <button onClick={onCreate} className="btn btn-primary btn-lg">
-        Create Your First Resume
+        Create Your First Resume →
       </button>
     </div>
   )
@@ -31,26 +52,49 @@ function EmptyResumes({ onCreate }) {
 
 function NewResumeCard({ onCreate }) {
   return (
-    <div onClick={onCreate} style={{
-      background: 'var(--bg-card)', border: '2px dashed var(--border)',
-      borderRadius: 'var(--radius-lg)', cursor: 'pointer',
-      display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', gap: 12, minHeight: 220,
-      transition: 'all 0.2s',
-    }}
-    onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent)'; e.currentTarget.style.background = 'var(--accent-glow)' }}
-    onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'var(--bg-card)' }}
+    <div
+      onClick={onCreate}
+      style={{
+        background: 'var(--bg-card)',
+        border: '1px dashed var(--border-light)',
+        borderRadius: 'var(--radius-lg)',
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 12,
+        minHeight: 220,
+        transition: 'all var(--transition)',
+      }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'var(--text-primary)'
+        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.04)'
+        e.currentTarget.style.transform = 'scale(1.01)'
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'var(--border-light)'
+        e.currentTarget.style.background = 'var(--bg-card)'
+        e.currentTarget.style.transform = 'none'
+      }}
     >
       <div style={{
-        width: 48, height: 48, borderRadius: 12,
-        background: 'var(--accent-glow)', border: '1px solid rgba(124,111,255,0.3)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        width: 44,
+        height: 44,
+        borderRadius: '50%',
+        background: 'rgba(255, 255, 255, 0.06)',
+        border: '1px solid var(--border)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
       </div>
-      <span style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--text-secondary)' }}>New Resume</span>
+      <span style={{ fontSize: 13.5, fontWeight: 500, color: 'var(--text-secondary)' }}>
+        New Resume
+      </span>
     </div>
   )
 }
@@ -65,30 +109,30 @@ export default function DashboardPage() {
   const goEdit = (id)  => navigate(`/resume/${id}`)
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
       <Navbar />
 
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        {/* Desktop sidebar */}
+        {/* Apple Desktop Sidebar */}
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
-        {/* Main content */}
-        <main className="dash-main page-enter" style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
+        {/* Main Dashboard Canvas */}
+        <main className="dash-main page-enter" style={{ flex: 1, padding: '32px 36px', overflowY: 'auto' }}>
 
           {/* ── RESUMES TAB ── */}
           {activeTab === 'resumes' && (
             <div>
-              <div className="page-head" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 20, gap: 16, flexWrap: 'wrap' }}>
+              <div className="page-head" style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 28, gap: 16, flexWrap: 'wrap' }}>
                 <div>
-                  <h1 className="page-title" style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 800, letterSpacing: -0.5 }}>
-                    Welcome back, {displayName.split(' ')[0]} 👋
+                  <h1 className="page-title" style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em' }}>
+                    Welcome back, {displayName.split(' ')[0]}
                   </h1>
-                  <p style={{ color: 'var(--text-muted)', fontSize: 13.5, marginTop: 4 }}>
-                    Manage and build your professional resumes
+                  <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4, letterSpacing: '-0.01em' }}>
+                    Manage and architect your professional resumes
                   </p>
                 </div>
-                <button className="btn btn-primary btn-lg" onClick={() => goNew()}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <button className="btn btn-primary btn-md" onClick={() => goNew()}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
                   </svg>
                   New Resume
@@ -97,27 +141,38 @@ export default function DashboardPage() {
 
               {/* 10-Day Retention Notice Banner */}
               <div style={{
-                background: 'linear-gradient(90deg, rgba(255, 179, 71, 0.1) 0%, rgba(124, 111, 255, 0.08) 100%)',
-                border: '1px solid rgba(255, 179, 71, 0.25)', borderRadius: 'var(--radius-md)',
-                padding: '12px 18px', marginBottom: 24, display: 'flex', alignItems: 'center',
-                justifyContent: 'space-between', gap: 12, flexWrap: 'wrap'
+                background: 'rgba(255, 159, 10, 0.08)',
+                border: '1px solid rgba(255, 159, 10, 0.22)',
+                borderRadius: 'var(--radius-md)',
+                padding: '12px 18px',
+                marginBottom: 28,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 12,
+                flexWrap: 'wrap'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ fontSize: 18 }}>⏳</span>
+                  <span>⏳</span>
                   <div style={{ fontSize: 13, color: 'var(--text-primary)' }}>
-                    <strong>10-Day Cloud Auto-Delete Policy:</strong> Resumes are automatically deleted after 10 days for ephemeral privacy. Always export your PDF backup!
+                    <strong>10-Day Ephemeral Retention:</strong> Resumes are automatically purged after 10 days for candidate privacy. Download your vector PDF or .tex file for permanent backup.
                   </div>
                 </div>
                 <span style={{
-                  fontSize: 11.5, fontWeight: 700, padding: '3px 9px', borderRadius: 100,
-                  background: 'rgba(255,179,71,0.15)', color: 'var(--warning)', border: '1px solid rgba(255,179,71,0.3)'
+                  fontSize: 11,
+                  fontWeight: 600,
+                  padding: '3px 9px',
+                  borderRadius: 'var(--radius-pill)',
+                  background: 'rgba(255, 159, 10, 0.15)',
+                  color: 'var(--warning)',
+                  border: '1px solid rgba(255, 159, 10, 0.3)'
                 }}>
-                  Protected with Security
+                  Zero Data Leak
                 </span>
               </div>
 
               {/* Stats */}
-              <div className="stats-grid-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 28 }}>
+              <div className="stats-grid-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 32 }}>
                 {loading ? <StatsGridSkeleton /> : <StatsGrid resumes={resumes} />}
               </div>
 
@@ -127,7 +182,7 @@ export default function DashboardPage() {
               ) : resumes.length === 0 ? (
                 <EmptyResumes onCreate={() => goNew()} />
               ) : (
-                <div className="resume-grid-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 18 }}>
+                <div className="resume-grid-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 20 }}>
                   <NewResumeCard onCreate={() => goNew()} />
                   {resumes.map(r => (
                     <ResumeCard key={r.id} resume={r} onEdit={goEdit} onDelete={remove} onDuplicate={duplicate} />
@@ -140,11 +195,11 @@ export default function DashboardPage() {
           {/* ── TEMPLATES TAB ── */}
           {activeTab === 'templates' && (
             <div>
-              <div style={{ marginBottom: 26 }}>
-                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 800, letterSpacing: -0.5 }}>
+              <div style={{ marginBottom: 28 }}>
+                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em' }}>
                   Resume Templates
                 </h1>
-                <p style={{ color: 'var(--text-muted)', fontSize: 13.5, marginTop: 4 }}>
+                <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4, letterSpacing: '-0.01em' }}>
                   Choose a starting template — switch anytime in the editor
                 </p>
               </div>
@@ -155,12 +210,15 @@ export default function DashboardPage() {
           {/* ── DEVELOPER TAB ── */}
           {activeTab === 'developer' && (
             <div>
-              <div style={{ marginBottom: 26 }}>
-                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 800, letterSpacing: -0.5 }}>
+              <div style={{ marginBottom: 28 }}>
+                <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 700, letterSpacing: '-0.03em' }}>
                   About the Developer
                 </h1>
-                <p style={{ color: 'var(--text-muted)', fontSize: 13.5, marginTop: 4 }}>
-                  ProResume — built with ❤️ as a free, open-source tool by <strong>Nejamul Haque</strong>
+                <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 4, letterSpacing: '-0.01em' }}>
+                  ProResume — built with precision as a free, open-source tool by{' '}
+                  <a href={PORTFOLIO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
+                    Nejamul Haque
+                  </a>
                 </p>
               </div>
               <DeveloperCard />

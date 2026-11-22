@@ -1,6 +1,6 @@
 import { supabase } from './supabase.js'
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001' + 'https://proresume-six.vercel.app'
+const BASE_URL = import.meta.env.VITE_API_URL || ''
 
 /**
  * Authenticated fetch against the Express backend.
@@ -41,6 +41,15 @@ export const api = {
     update:    (id, body)        => apiFetch(`/api/resumes/${id}`,    { method: 'PATCH', body }),
     delete:    (id)              => apiFetch(`/api/resumes/${id}`,    { method: 'DELETE' }),
     duplicate: (id)              => apiFetch(`/api/resumes/${id}/duplicate`, { method: 'POST' }),
+    renderPdf: async ({ title, html }) => {
+      const res = await fetch(`${BASE_URL}/api/resumes/render-pdf`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, html })
+      })
+      if (!res.ok) throw new Error('Server PDF rendering failed')
+      return await res.blob()
+    },
   },
   profiles: {
     me:     ()      => apiFetch('/api/profiles/me'),

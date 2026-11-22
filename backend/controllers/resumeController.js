@@ -1,5 +1,6 @@
 import { supabaseAdmin } from '../lib/supabase.js'
 import { mockStore } from '../lib/db.js'
+import { generateResumePdf } from '../lib/pdfGenerator.js'
 import { createHttpError } from '../middleware/errorHandler.js'
 
 // ─── helpers ──────────────────────────────────────────────────────────────
@@ -215,4 +216,23 @@ export async function setVisibility(req, res) {
 
   resume.is_public = isPublic
   res.json({ resume, message: `Resume is now ${isPublic ? 'public' : 'private'}` })
+}
+
+/**
+ * POST /api/resumes/render-pdf
+ * Renders HTML into a high-DPI vector PDF via puppeteer-core
+ */
+export async function renderPdf(req, res) {
+  const { html, title } = req.body
+  if (!html) {
+    return res.status(400).json({ error: 'HTML markup is required to render PDF' })
+  }
+
+  const sanitizedTitle = (title || 'resume').replace(/[^a-zA-Z0-9_-]/g, '_')
+  const pdfBuffer = await generateResumePdf({ html, title: sanitizedTitle })
+
+  res.setHeader('Content-Type', 'application/pdf')
+  res.setHeader('Content-Disposition', `attachment; filename="${sanitizedTitle}.pdf"`)
+  res.setHeader('Content-Length', pdfBuffer.length)
+  res.end(pdfBuffer)
 }

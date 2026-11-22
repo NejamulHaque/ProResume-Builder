@@ -4,7 +4,9 @@ import { toast } from 'react-hot-toast'
 import { useAuth } from '../hooks/useAuth.jsx'
 import { api } from '../lib/api.js'
 
-const TARGET_ADMIN_EMAIL = 'nejamulhaque.works@gmail.com'
+import { ADMIN_EMAIL } from '../lib/constants.js'
+
+const TARGET_ADMIN_EMAIL = ADMIN_EMAIL
 
 export default function AdminDashboardPage() {
   const { user, displayName } = useAuth()
@@ -94,8 +96,9 @@ export default function AdminDashboardPage() {
       
       {/* ── TOP ADMIN HEADER ── */}
       <header style={{
-        height: 66, borderBottom: '1px solid var(--border)',
-        background: 'rgba(15, 15, 24, 0.95)', backdropFilter: 'blur(20px)',
+        height: 58, borderBottom: '1px solid var(--border)',
+        background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'saturate(180%) blur(20px)',
+        WebkitBackdropFilter: 'saturate(180%) blur(20px)',
         padding: '0 28px', display: 'flex', alignItems: 'center',
         justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 100,
         flexWrap: 'wrap', gap: 12

@@ -6,34 +6,95 @@ import ResumePreview from '../components/resume/ResumePreview.jsx'
 import { SAMPLE_RESUME_DATA } from '../lib/resumeDefaults.js'
 import { useSeo } from '../lib/seo.js'
 import SocialShareModal from '../components/ui/SocialShareModal.jsx'
-
-const IRUS_AI_URL = 'https://irus-ai.onrender.com'
-const GITHUB_REPO_URL = 'https://github.com/NejamulHaque/ProResume-Builder'
-const PORTFOLIO_URL = 'https://nejamulhaque.vercel.app/'
+import { PORTFOLIO_URL, GITHUB_REPO_URL, IRUS_AI_URL, CONTACT_EMAIL, ADMIN_EMAIL } from '../lib/constants.js'
 
 const TEMPLATE_PREVIEWS = [
-  { id: 'modern',    name: 'Modern Indigo', color: '#7c6fff', desc: 'Sleek two-column header with dynamic accent badge.' },
-  { id: 'minimal',   name: 'Minimalist Clean', color: '#555555', desc: 'Editorial serif layout with strict typographical hierarchy.' },
-  { id: 'executive', name: 'Executive Gold', color: '#b8860b', desc: 'Authoritative dark banner with warm gold accents.' },
-  { id: 'technical', name: 'Terminal Code', color: '#00d4aa', desc: 'Developer dark mode with syntax brackets and monospace.' },
-  { id: 'creative',  name: 'Creative Rose', color: '#ff6b9d', desc: 'Bold gradient sidebar layout for designers and creators.' },
+  { id: 'modern',    name: 'Modern Indigo', color: '#2997ff', badge: 'Popular', desc: 'Sleek two-column header with dynamic accent badge for software engineers.' },
+  { id: 'minimal',   name: 'Minimalist Clean', color: '#86868b', badge: 'Apple Style', desc: 'Editorial serif layout with strict typographical hierarchy and maximum whitespace.' },
+  { id: 'executive', name: 'Executive Gold', color: '#e5a93c', badge: 'Leadership', desc: 'Authoritative dark banner with warm gold accents for senior leaders and managers.' },
+  { id: 'technical', name: 'Terminal Code', color: '#30d158', badge: 'DevSecOps', desc: 'Developer dark aesthetic with syntax brackets, command prompts, and monospace typography.' },
+  { id: 'creative',  name: 'Creative Rose', color: '#ff375f', badge: 'Design', desc: 'Balanced sidebar layout with vibrant accents tailored for product designers and creators.' },
 ]
 
 const FEATURES = [
-  { icon: '⌨️', title: 'Overleaf LaTeX Engine', desc: 'Real-time side-by-side Overleaf LaTeX code editor with FAANG macros and 1-click .tex file export.' },
-  { icon: '🤖', title: 'IRUS AI Intelligence', desc: 'Deep intelligence from irus-ai.onrender.com to craft quantified bullets, executive summaries, and cover letters.' },
-  { icon: '🐙', title: '1-Click GitHub Importer', desc: 'Instantly turn public GitHub repositories and tech stacks into structured resume project entries.' },
-  { icon: '🛡️', title: 'DevSecOps Security Audit', desc: 'Automated pre-flight scanner ensuring zero API key leaks, credentials, or private IPs before export.' },
-  { icon: '🎯', title: 'Recruiter ATS Optimizer', desc: 'Built-in keyword density scanner and action-verb scorer to guarantee 98%+ ATS screening pass rate.' },
-  { icon: '⏳', title: '10-Day Ephemeral Retention', desc: 'Zero data risk. Resumes auto-purged from Neon PostgreSQL after 10 days for maximum cloud privacy.' },
-  { icon: '📄', title: 'High-DPI Vector PDFs', desc: 'Export crystal-clear vector PDFs with crisp typography and perfect print margins.' },
-  { icon: '💎', title: '100% Free & Open-Source', desc: 'No paywalls, no hidden watermarks, and no mandatory subscription upgrades. MIT Licensed.' },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/>
+      </svg>
+    ),
+    title: 'Overleaf LaTeX Engine',
+    desc: 'Side-by-side Overleaf LaTeX code editor with FAANG macros (\\resumeSubheading) and instant 1-click .tex source export.'
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2 2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z"/><rect x="4" y="8" width="16" height="12" rx="2"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/><path d="M9 17h6"/>
+      </svg>
+    ),
+    title: 'IRUS AI Intelligence',
+    desc: 'Integrated with irus-ai.onrender.com to craft quantified action-verb bullets, executive summaries, and targeted cover letters.'
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+      </svg>
+    ),
+    title: '1-Click GitHub Importer',
+    desc: 'Instantly import your public GitHub repositories, stars, language stacks, and descriptions into structured resume project entries.'
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    ),
+    title: 'DevSecOps Security Audit',
+    desc: 'Automated pre-flight scanner audits your resume to ensure zero accidental leaks of API tokens, SSH keys, or private IP addresses.'
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+      </svg>
+    ),
+    title: 'Recruiter ATS Optimizer',
+    desc: 'Real-time keyword density scoring and action-verb frequency analysis to ensure your resume passes ATS filters with 98%+ rate.'
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+      </svg>
+    ),
+    title: '10-Day Ephemeral Retention',
+    desc: 'Maximum candidate privacy. Stored resumes are automatically purged from the cloud database after 10 days with zero data sales.'
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+      </svg>
+    ),
+    title: 'High-DPI Vector PDFs',
+    desc: 'Generates vector PDFs using native browser printing with crystal-clear vector text, zero rasterization blur, and no watermarks.'
+  },
+  {
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+    ),
+    title: '100% Free & Open-Source',
+    desc: 'No hidden paywalls, no mandatory premium subscriptions, and no export limits. Completely free and open under the MIT License.'
+  },
 ]
 
 const FAQS = [
   {
-    q: 'How does the Overleaf LaTeX Editor work?',
-    a: 'ProResume features a bi-directional Overleaf LaTeX compiler. You can edit via visual form or write standard LaTeX code with FAANG / Jake\'s resume macros (\resumeSubheading, \resumeItem). Changes compile live and you can export the raw .tex source code anytime!'
+    q: 'How does the Overleaf LaTeX Studio work?',
+    a: 'ProResume features a bi-directional Overleaf LaTeX compiler. You can edit via visual form inputs or write standard LaTeX code with FAANG / Jake\'s resume macros (\\resumeSubheading, \\resumeItem). Changes compile live, and you can export the raw .tex source code anytime.'
   },
   {
     q: 'How does the 10-day auto-delete policy protect my privacy?',
@@ -71,7 +132,8 @@ export default function LandingPage() {
   const [selectedTemplate, setSelectedTemplate] = useState('modern')
   const [activeFaq, setActiveFaq] = useState(0)
   const [showShareModal, setShowShareModal] = useState(false)
-  
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   // Interactive Simulator State
   const [simName, setSimName] = useState('NEJAMUL HAQUE')
   const [simRole, setSimRole] = useState('Computer Science Undergraduate | DevSecOps Aspirant')
@@ -81,10 +143,10 @@ export default function LandingPage() {
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [sendingContact, setSendingContact] = useState(false)
 
-  const isAdmin = user?.email === 'nejamulhaque.works@gmail.com' || user?.email === 'nejamulhaqueruhaan86@gmail.com'
+  const isAdmin = user?.email === ADMIN_EMAIL || user?.email === 'nejamulhaqueruhaan86@gmail.com'
 
   useSeo({
-    title: 'ATS Resume Architect',
+    title: 'ATS Resume Architect & Overleaf LaTeX Studio',
     description: 'Build FAANG-grade ATS resumes with Overleaf LaTeX compilation, IRUS AI bullet enhancements, modern templates, and 10-day ephemeral cloud privacy. 100% Free.',
     canonical: 'https://proresume-six.vercel.app/'
   })
@@ -122,10 +184,8 @@ export default function LandingPage() {
       setSendingContact(false)
       setContactForm({ name: '', email: '', subject: '', message: '' })
       toast.success('Thank you! Your message has been sent to Nejamul Haque.')
-    }, 750)
+    }, 600)
   }
-
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)', overflowX: 'hidden' }}>
@@ -134,75 +194,96 @@ export default function LandingPage() {
       <SocialShareModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
-        shareUrl="https://github.com/NejamulHaque/ProResume-Builder"
+        shareUrl={GITHUB_REPO_URL}
       />
 
-      {/* ── FROZEN / STICKY TOP NAVIGATION ── */}
+      {/* ── APPLE-STYLE FROSTED TOP NAVIGATION ── */}
       <header role="banner" style={{
-        height: 72, borderBottom: '1px solid var(--border)',
-        background: 'rgba(9, 9, 15, 0.92)', backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000,
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px'
+        height: 56,
+        borderBottom: '1px solid var(--border)',
+        background: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'saturate(180%) blur(20px)',
+        WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        padding: '0 28px'
       }}>
         {/* Logo */}
         <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none', color: 'inherit' }}>
           <div style={{
-            width: 38, height: 38, borderRadius: 10,
-            background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: 'var(--shadow-accent)',
+            width: 30,
+            height: 30,
+            borderRadius: 8,
+            background: '#ffffff',
+            color: '#000000',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 15,
+            fontWeight: 800,
+            letterSpacing: -0.5
           }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-              <polyline points="14,2 14,8 20,8"/>
-              <line x1="16" y1="13" x2="8" y2="13"/>
-              <line x1="16" y1="17" x2="8" y2="17"/>
-            </svg>
+            P
           </div>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 21, letterSpacing: -0.5 }}>
-            ATS<span className="gradient-text">Resume</span>
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 17, letterSpacing: -0.4 }}>
+            Pro<span style={{ color: 'var(--accent)' }}>Resume</span>
           </span>
         </Link>
 
         {/* Center Navigation Links (Desktop) */}
-        <nav className="desktop-only" aria-label="Main Navigation" style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
-          <a href="#templates" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13.5, fontWeight: 500 }}>Templates</a>
-          <a href="#latex" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13.5, fontWeight: 500 }}>LaTeX Editor</a>
-          <a href="#irus-ai" style={{ color: 'var(--accent)', textDecoration: 'none', fontSize: 13.5, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
-            <span>🤖</span> IRUS AI
+        <nav className="desktop-only" aria-label="Main Navigation" style={{ display: 'flex', alignItems: 'center', gap: 26 }}>
+          <a href="#templates" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13, fontWeight: 500, transition: 'color 0.15s' }}>
+            Templates
           </a>
-          <a href="#features" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13.5, fontWeight: 500 }}>Features</a>
-          <a href="#contact" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13.5, fontWeight: 500 }}>Contact</a>
-          <a href="#faq" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13.5, fontWeight: 500 }}>FAQ</a>
+          <a href="#simulator" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13, fontWeight: 500, transition: 'color 0.15s' }}>
+            Simulator
+          </a>
+          <a href="#latex" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13, fontWeight: 500, transition: 'color 0.15s' }}>
+            LaTeX Studio
+          </a>
+          <a href="#irus-ai" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13, fontWeight: 500, transition: 'color 0.15s', display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ color: 'var(--accent)' }}>●</span> IRUS AI
+          </a>
+          <a href="#features" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13, fontWeight: 500, transition: 'color 0.15s' }}>
+            Features
+          </a>
+          <a href="#contact" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13, fontWeight: 500, transition: 'color 0.15s' }}>
+            Contact
+          </a>
+          <a href="#faq" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontSize: 13, fontWeight: 500, transition: 'color 0.15s' }}>
+            FAQ
+          </a>
         </nav>
 
-        {/* Right CTA */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        {/* Right Action CTAs */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
             onClick={() => setShowShareModal(true)}
             className="btn btn-ghost btn-sm desktop-only"
-            style={{ color: 'var(--text-secondary)' }}
+            style={{ color: 'var(--text-secondary)', fontSize: 12.5 }}
             title="Share ProResume"
           >
-            🚀 Share
+            Share
           </button>
 
           {isAdmin && (
             <Link
               to="/admin"
-              className="btn btn-ghost btn-sm desktop-only"
-              style={{
-                fontSize: 12, fontWeight: 700, color: 'var(--accent)',
-                background: 'rgba(124,111,255,0.12)', border: '1px solid rgba(124,111,255,0.3)',
-                padding: '5px 12px', borderRadius: 8, textDecoration: 'none'
-              }}
+              className="btn btn-secondary btn-sm desktop-only"
+              style={{ fontSize: 11.5, padding: '4px 10px' }}
             >
-              🛡️ Admin
+              Admin
             </Link>
           )}
 
           {user ? (
-            <Link to="/dashboard" className="btn btn-primary btn-md">
+            <Link to="/dashboard" className="btn btn-primary btn-sm">
               Dashboard →
             </Link>
           ) : (
@@ -210,8 +291,8 @@ export default function LandingPage() {
               <Link to="/auth" className="btn btn-ghost btn-sm desktop-only" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>
                 Sign In
               </Link>
-              <Link to="/auth" className="btn btn-primary btn-md" style={{ padding: '8px 18px', textDecoration: 'none', fontWeight: 700 }}>
-                Start Free 🚀
+              <Link to="/auth" className="btn btn-primary btn-sm">
+                Get Started
               </Link>
             </>
           )}
@@ -220,7 +301,7 @@ export default function LandingPage() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="btn btn-ghost btn-sm mobile-only"
-            style={{ padding: '6px', fontSize: 18, color: 'var(--text-primary)' }}
+            style={{ padding: '6px 10px', fontSize: 16, color: 'var(--text-primary)' }}
             aria-label="Toggle navigation menu"
           >
             {mobileMenuOpen ? '✕' : '☰'}
@@ -231,172 +312,347 @@ export default function LandingPage() {
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
         <div style={{
-          position: 'fixed', top: 72, left: 0, right: 0, bottom: 0,
-          background: 'rgba(9, 9, 15, 0.98)', backdropFilter: 'blur(20px)',
-          zIndex: 999, padding: '24px', display: 'flex', flexDirection: 'column', gap: 16,
-          animation: 'fadeIn 0.2s ease', overflowY: 'auto'
+          position: 'fixed',
+          top: 56,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(0, 0, 0, 0.95)',
+          backdropFilter: 'saturate(180%) blur(24px)',
+          zIndex: 999,
+          padding: '28px 24px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 16,
+          animation: 'fadeIn 0.2s ease',
+          overflowY: 'auto'
         }}>
           <a href="#templates" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            🎨 5 Resume Templates
-          </a>
-          <a href="#latex" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            ⌨️ Overleaf LaTeX Studio
-          </a>
-          <a href="#irus-ai" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--accent)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            🤖 IRUS AI Assistant
+            Templates
           </a>
           <a href="#simulator" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            🎯 Live ATS Simulator
+            Interactive Simulator
+          </a>
+          <a href="#latex" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            Overleaf LaTeX Studio
+          </a>
+          <a href="#irus-ai" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+            IRUS AI Copilot
           </a>
           <a href="#features" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            ✨ Features &amp; Privacy
+            Features
           </a>
           <a href="#contact" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            💬 Contact Developer (Nejamul Haque)
+            Contact Creator
           </a>
           <a href="#faq" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontSize: 17, fontWeight: 600, padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-            ❓ FAQ
+            Frequently Asked Questions
           </a>
-          <Link to="/privacy" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14, padding: '8px 0' }}>
-            🔒 Privacy Policy
-          </Link>
-          <Link to="/terms" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14, padding: '8px 0' }}>
-            📜 Terms of Service
-          </Link>
+          <div style={{ display: 'flex', gap: 16, paddingTop: 12 }}>
+            <Link to="/privacy" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14 }}>
+              Privacy Policy
+            </Link>
+            <Link to="/terms" onClick={() => setMobileMenuOpen(false)} style={{ color: 'var(--text-muted)', textDecoration: 'none', fontSize: 14 }}>
+              Terms of Service
+            </Link>
+          </div>
           
           <button
             onClick={() => { setMobileMenuOpen(false); handleStartBuilding(); }}
             className="btn btn-primary btn-lg"
-            style={{ width: '100%', justifyContent: 'center', marginTop: 12, fontWeight: 800 }}
+            style={{ width: '100%', justifyContent: 'center', marginTop: 16, fontWeight: 700 }}
           >
-            Create My Resume Free 🚀
+            Create My Resume Free →
           </button>
         </div>
       )}
 
-      {/* Main Container with top padding for frozen navbar */}
-      <main role="main" style={{ paddingTop: 88 }}>
+      {/* Main Content Area */}
+      <main role="main" style={{ paddingTop: 56 }}>
 
-        {/* ── HERO SECTION ── */}
-        <section style={{ padding: '40px 24px 70px', maxWidth: 1200, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
-          
-          {/* Subtle Ambient Glow */}
+        {/* ── HERO SECTION (Apple Minimal Centered Design) ── */}
+        <section style={{
+          padding: '80px 24px 70px',
+          maxWidth: 1040,
+          margin: '0 auto',
+          textAlign: 'center',
+          position: 'relative'
+        }}>
+          {/* Subtle Ambient Radial Glow */}
           <div style={{
-            position: 'absolute', top: 0, left: '50%', transform: 'translateX(-50%)',
-            width: 700, height: 350, background: 'radial-gradient(circle, rgba(124,111,255,0.18) 0%, transparent 70%)',
-            pointerEvents: 'none', zIndex: 0
+            position: 'absolute',
+            top: 20,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: 700,
+            height: 380,
+            background: 'radial-gradient(circle, rgba(41, 151, 255, 0.12) 0%, transparent 68%)',
+            pointerEvents: 'none',
+            zIndex: 0
           }} />
 
           <div style={{ position: 'relative', zIndex: 1 }}>
             
-            {/* Super Badge */}
+            {/* Apple Eyebrow Pill */}
             <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: 8,
-              padding: '6px 16px', borderRadius: 100,
-              background: 'rgba(124,111,255,0.12)', border: '1px solid rgba(124,111,255,0.28)',
-              fontSize: 13, fontWeight: 600, color: 'var(--accent)', marginBottom: 20
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '6px 18px',
+              borderRadius: 'var(--radius-pill)',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid var(--border-light)',
+              fontSize: 12.5,
+              fontWeight: 500,
+              color: 'var(--text-secondary)',
+              marginBottom: 24,
+              backdropFilter: 'blur(10px)'
             }}>
-              <span>⌨️ Overleaf LaTeX Engine &amp; 🤖 IRUS AI</span>
-              <span style={{ width: 4, height: 4, borderRadius: '50%', background: 'currentColor' }} />
-              <span style={{ color: 'var(--text-muted)' }}>10-Day Zero-Leak Cloud Privacy</span>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--accent)' }} />
+              <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Overleaf LaTeX Studio</span>
+              <span>•</span>
+              <span>10-Day Ephemeral Retention</span>
             </div>
 
-            {/* Hero Heading */}
+            {/* Apple Hero Headline */}
             <h1 style={{
-              fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5.5vw, 68px)',
-              fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.03em',
-              marginBottom: 20, maxWidth: 960, margin: '0 auto 20px'
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(40px, 6.2vw, 76px)',
+              fontWeight: 700,
+              lineHeight: 1.06,
+              letterSpacing: '-0.035em',
+              marginBottom: 24,
+              maxWidth: 960,
+              margin: '0 auto 24px',
+              color: 'var(--text-primary)'
             }}>
-              ATS Resume Architect &amp; Overleaf <span className="gradient-text">LaTeX Studio</span>.
+              The resume platform for <span className="gradient-text">precision engineering</span>.
             </h1>
 
             <p style={{
-              fontSize: 'clamp(16px, 1.8vw, 20px)', color: 'var(--text-secondary)',
-              lineHeight: 1.6, maxWidth: 780, margin: '0 auto 34px'
+              fontSize: 'clamp(17px, 2vw, 21px)',
+              color: 'var(--text-secondary)',
+              lineHeight: 1.55,
+              maxWidth: 720,
+              margin: '0 auto 38px',
+              letterSpacing: '-0.015em'
             }}>
-              Craft FAANG-approved resumes with real-time LaTeX compilation, IRUS AI bullet enhancements, 1-click GitHub project importing, DevSecOps secret leak scanning, and <strong>10-day auto-purge cloud privacy</strong>.
+              Craft FAANG-standard resumes with live Overleaf LaTeX compilation, IRUS AI bullet enhancements, 1-click GitHub importing, and <strong>10-day auto-purge cloud privacy</strong>.
             </p>
 
-            {/* High-Converting CTA Button Group */}
+            {/* Apple CTA Pill Group */}
             <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 44 }}>
               <button
                 onClick={() => handleStartBuilding()}
                 className="btn btn-primary btn-lg"
-                style={{ fontSize: 16, padding: '14px 32px', fontWeight: 800, boxShadow: 'var(--shadow-accent)' }}
               >
-                Create My Resume Free 🚀
+                Create Free Resume →
               </button>
-              <button
-                onClick={() => handleStartBuilding('technical')}
+              <a
+                href="#templates"
                 className="btn btn-secondary btn-lg"
-                style={{ fontSize: 15, padding: '14px 26px', fontWeight: 700 }}
               >
-                ⌨️ Open LaTeX Studio
-              </button>
+                Explore Templates
+              </a>
               <button
                 onClick={() => setShowShareModal(true)}
                 className="btn btn-ghost btn-lg"
-                style={{ fontSize: 15, padding: '14px 20px', color: 'var(--text-secondary)' }}
+                style={{ color: 'var(--text-secondary)' }}
               >
-                📢 Share App
+                Share
               </button>
             </div>
 
-            {/* Trust Badges */}
+            {/* Trust Markers */}
             <div style={{
-              display: 'flex', justifyContent: 'center', gap: 28, flexWrap: 'wrap',
-              fontSize: 13, color: 'var(--text-muted)'
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 28,
+              flexWrap: 'wrap',
+              fontSize: 13,
+              color: 'var(--text-secondary)',
+              letterSpacing: '-0.01em'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ color: 'var(--success)' }}>✓</span> 100% Free Forever
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <span style={{ color: 'var(--success)' }}>✓</span> 100% Free &amp; Open Source
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ color: 'var(--success)' }}>✓</span> No Watermark on PDF
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <span style={{ color: 'var(--success)' }}>✓</span> Zero PDF Watermarks
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ color: 'var(--success)' }}>✓</span> Overleaf .tex Source Export
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <span style={{ color: 'var(--success)' }}>✓</span> Full Overleaf .tex Export
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ color: 'var(--success)' }}>✓</span> DevSecOps Leak Guard
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+                <span style={{ color: 'var(--success)' }}>✓</span> Secret Leak Scanner Guard
               </div>
             </div>
 
           </div>
         </section>
 
-        {/* ── INTERACTIVE LIVE RESUME SIMULATOR ── */}
-        <section id="simulator" style={{ padding: '40px 24px 80px', maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <div style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>
-              Interactive Live Preview
-            </div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 42px)', fontWeight: 800, marginBottom: 12 }}>
-              Try the Live Simulator with Official Resume Data
+        {/* ── SECTION 1: TEMPLATES SHOWCASE (#templates) ── */}
+        <section id="templates" style={{
+          padding: '70px 24px',
+          maxWidth: 1140,
+          margin: '0 auto',
+          position: 'relative'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: 44 }}>
+            <span style={{
+              fontSize: 11.5,
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: 'var(--accent)',
+              display: 'inline-block',
+              marginBottom: 10
+            }}>
+              Curated Layouts
+            </span>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(28px, 3.8vw, 44px)',
+              fontWeight: 700,
+              letterSpacing: '-0.03em',
+              marginBottom: 14
+            }}>
+              Engineered for readability. Tailored for success.
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: 15, maxWidth: 640, margin: '0 auto' }}>
-              Edit inputs on the left to see instant, synchronized document morphing with real-time ATS scoring.
+            <p style={{ color: 'var(--text-secondary)', fontSize: 16, maxWidth: 640, margin: '0 auto', letterSpacing: '-0.01em' }}>
+              Switch seamlessly between five industry-vetted templates at any moment without ever losing your data.
             </p>
           </div>
 
           <div style={{
-            display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-            gap: 28, background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xl)', padding: '28px', boxShadow: 'var(--shadow-xl)'
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 16
           }}>
-            {/* Left Controls */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+            {TEMPLATE_PREVIEWS.map(t => {
+              const isSelected = selectedTemplate === t.id
+              return (
+                <div
+                  key={t.id}
+                  onClick={() => setSelectedTemplate(t.id)}
+                  style={{
+                    background: isSelected ? 'rgba(255, 255, 255, 0.07)' : 'var(--bg-card)',
+                    border: `1px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
+                    borderRadius: 'var(--radius-lg)',
+                    padding: 22,
+                    cursor: 'pointer',
+                    transition: 'all var(--transition)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: isSelected ? '0 10px 30px rgba(41, 151, 255, 0.15)' : 'none'
+                  }}
+                >
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <div style={{ width: 12, height: 12, borderRadius: '50%', background: t.color }} />
+                      <span style={{
+                        fontSize: 11,
+                        padding: '2px 8px',
+                        borderRadius: 'var(--radius-pill)',
+                        background: 'rgba(255, 255, 255, 0.12)',
+                        color: '#ffffff',
+                        fontWeight: 600
+                      }}>
+                        {t.badge}
+                      </span>
+                    </div>
+                    <h3 style={{ fontSize: 16, fontWeight: 600, letterSpacing: '-0.02em', marginBottom: 8 }}>
+                      {t.name}
+                    </h3>
+                    <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.55 }}>
+                      {t.desc}
+                    </p>
+                  </div>
+
+                  <div style={{ marginTop: 20 }}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleStartBuilding(t.id)
+                      }}
+                      className="btn btn-secondary btn-sm"
+                      style={{ width: '100%', fontSize: 12 }}
+                    >
+                      Use Template →
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+
+        {/* ── SECTION 2: INTERACTIVE LIVE RESUME SIMULATOR (#simulator) ── */}
+        <section id="simulator" style={{
+          padding: '70px 24px 90px',
+          maxWidth: 1140,
+          margin: '0 auto',
+          position: 'relative'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: 44 }}>
+            <span style={{
+              fontSize: 11.5,
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: 'var(--accent)',
+              display: 'inline-block',
+              marginBottom: 10
+            }}>
+              Live Document Morphing
+            </span>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(28px, 3.8vw, 44px)',
+              fontWeight: 700,
+              letterSpacing: '-0.03em',
+              marginBottom: 14
+            }}>
+              Experience instant real-time synchronization.
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 16, maxWidth: 640, margin: '0 auto', letterSpacing: '-0.01em' }}>
+              Adjust live fields below and see the synchronized vector canvas update dynamically with verified ATS scoring.
+            </p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: 28,
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-xl)',
+            padding: 28,
+            boxShadow: 'var(--shadow-lg)'
+          }}>
+            {/* Left Controls Column */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div style={{
-                padding: '12px 16px', borderRadius: 'var(--radius-md)',
-                background: 'rgba(124,111,255,0.08)', border: '1px solid rgba(124,111,255,0.2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+                padding: '14px 18px',
+                borderRadius: 'var(--radius-md)',
+                background: 'rgba(48, 209, 88, 0.08)',
+                border: '1px solid rgba(48, 209, 88, 0.25)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
               }}>
-                <span style={{ fontSize: 13, fontWeight: 600 }}>🎯 ATS Match Score</span>
-                <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--success)' }}>98% PASS</span>
+                <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--text-primary)' }}>
+                  ATS Recruiter Screening
+                </span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--success)' }}>
+                  98% Verified Pass
+                </span>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Full Name</label>
+                <label htmlFor="sim-name" className="form-label">Full Name</label>
                 <input
+                  id="sim-name"
                   className="input"
                   value={simName}
                   onChange={e => setSimName(e.target.value)}
@@ -405,8 +661,9 @@ export default function LandingPage() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Target Role / Title</label>
+                <label htmlFor="sim-role" className="form-label">Target Role / Subheading</label>
                 <input
+                  id="sim-role"
                   className="input"
                   value={simRole}
                   onChange={e => setSimRole(e.target.value)}
@@ -415,8 +672,9 @@ export default function LandingPage() {
               </div>
 
               <div className="form-group">
-                <label className="form-label">Lead Bullet Point (IRUS AI Rewritten)</label>
+                <label htmlFor="sim-bullet" className="form-label">High-Impact Bullet Point</label>
                 <textarea
+                  id="sim-bullet"
                   className="input"
                   rows={3}
                   value={simBullet}
@@ -424,20 +682,24 @@ export default function LandingPage() {
                 />
               </div>
 
-              {/* Template picker inside simulator */}
               <div>
-                <label className="form-label">Choose Layout Style</label>
+                <label className="form-label">Active Template</label>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
                   {TEMPLATE_PREVIEWS.map(t => (
                     <button
                       key={t.id}
                       onClick={() => setSelectedTemplate(t.id)}
                       style={{
-                        padding: '8px 4px', borderRadius: 8,
-                        background: selectedTemplate === t.id ? 'var(--accent)' : 'var(--bg-card)',
-                        color: selectedTemplate === t.id ? '#fff' : 'var(--text-secondary)',
-                        border: '1px solid var(--border)', fontSize: 11, fontWeight: 600,
-                        cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center'
+                        padding: '8px 4px',
+                        borderRadius: 'var(--radius-sm)',
+                        background: selectedTemplate === t.id ? 'var(--text-primary)' : 'rgba(255, 255, 255, 0.05)',
+                        color: selectedTemplate === t.id ? '#000000' : 'var(--text-secondary)',
+                        border: '1px solid var(--border)',
+                        fontSize: 11,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        textAlign: 'center'
                       }}
                     >
                       {t.name.split(' ')[0]}
@@ -449,153 +711,319 @@ export default function LandingPage() {
               <button
                 onClick={() => handleStartBuilding(selectedTemplate)}
                 className="btn btn-primary btn-lg"
-                style={{ width: '100%', justifyContent: 'center', marginTop: 10, fontWeight: 700 }}
+                style={{ width: '100%', marginTop: 8 }}
               >
-                Customize This Resume in Full Editor →
+                Open in Full Editor →
               </button>
             </div>
 
-            {/* Right Live Document Preview Canvas */}
+            {/* Right Live Canvas Box (macOS Window Chrome Frame) */}
             <div style={{
-              background: '#090d14', borderRadius: 'var(--radius-lg)',
-              padding: '24px 16px', display: 'flex', justifyContent: 'center',
-              alignItems: 'center', overflow: 'hidden', border: '1px solid var(--border)'
+              background: '#070709',
+              borderRadius: 'var(--radius-lg)',
+              border: '1px solid var(--border)',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden'
             }}>
+              {/* Window Chrome Header */}
               <div style={{
-                background: '#fff', borderRadius: 4,
-                boxShadow: '0 20px 60px rgba(0,0,0,0.85)',
-                transform: 'scale(0.85)', transformOrigin: 'top center',
-                transition: 'all 0.3s ease'
+                height: 38,
+                background: 'rgba(255, 255, 255, 0.03)',
+                borderBottom: '1px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0 16px',
+                gap: 8
               }}>
-                <ResumePreview
-                  data={liveMockData}
-                  template={selectedTemplate}
-                  scale={0.78}
-                  accentColor={TEMPLATE_PREVIEWS.find(t => t.id === selectedTemplate)?.color || '#7c6fff'}
-                />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f56' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffbd2e' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27c93f' }} />
+                <span style={{ fontSize: 11.5, color: 'var(--text-muted)', marginLeft: 8 }}>
+                  live_preview.pdf
+                </span>
               </div>
-            </div>
-          </div>
-        </section>
 
-        {/* ── OVERLEAF LATEX STUDIO SHOWCASE ── */}
-        <section id="latex" style={{ padding: '60px 24px 80px', maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(16,185,129,0.08) 0%, rgba(124,111,255,0.06) 100%)',
-            border: '1px solid rgba(16,185,129,0.25)', borderRadius: 'var(--radius-xl)',
-            padding: '40px 32px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: 32, alignItems: 'center'
-          }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 20, background: 'rgba(16,185,129,0.15)', color: '#10b981', fontSize: 12, fontWeight: 700, marginBottom: 12 }}>
-                ⌨️ Overleaf LaTeX Studio
-              </div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 3.2vw, 38px)', fontWeight: 800, marginBottom: 14 }}>
-                FAANG-Standard LaTeX Code Compilation
-              </h2>
-              <p style={{ color: 'var(--text-secondary)', fontSize: 14.5, lineHeight: 1.6, marginBottom: 20 }}>
-                Write clean, industry-standard LaTeX using Jake\'s Resume macros (<code style={{ color: '#10b981' }}>\resumeSubheading</code>, <code style={{ color: '#10b981' }}>\resumeItem</code>). Press <kbd style={{ background: 'var(--bg-elevated)', padding: '2px 6px', borderRadius: 4, border: '1px solid var(--border)' }}>Cmd+Enter</kbd> to compile in real-time or export the raw <code style={{ color: '#10b981' }}>.tex</code> source for Overleaf.
-              </p>
-              <button
-                onClick={() => handleStartBuilding('technical')}
-                className="btn btn-primary btn-md"
-                style={{ background: '#10b981', borderColor: '#10b981', fontWeight: 700 }}
-              >
-                Launch Overleaf Studio 🚀
-              </button>
-            </div>
-
-            {/* Dark Code Mockup */}
-            <div style={{
-              background: '#0d1117', border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: 12, padding: 18, fontFamily: 'var(--font-mono)', fontSize: 12,
-              color: '#c9d1d9', lineHeight: 1.6, overflowX: 'auto', boxShadow: 'var(--shadow-xl)'
-            }}>
-              <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
-                <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f56' }} />
-                <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffbd2e' }} />
-                <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#27c93f' }} />
-              </div>
-              <p style={{ margin: 0, color: '#8b949e' }}>% FAANG LaTeX Resume Engine</p>
-              <p style={{ margin: 0 }}><span style={{ color: '#ff7b72' }}>\begin</span>&#123;document&#125;</p>
-              <p style={{ margin: 0, paddingLeft: 12 }}><span style={{ color: '#79c0ff' }}>\resumeSubheading</span></p>
-              <p style={{ margin: 0, paddingLeft: 24 }}>&#123;NEJAMUL HAQUE&#125;&#123;Bettiah, Bihar, India&#125;</p>
-              <p style={{ margin: 0, paddingLeft: 24 }}>&#123;DevSecOps &amp; CS Undergraduate&#125;&#123;2023 -- 2027&#125;</p>
-              <p style={{ margin: 0, paddingLeft: 12 }}><span style={{ color: '#79c0ff' }}>\resumeItemListStart</span></p>
-              <p style={{ margin: 0, paddingLeft: 24 }}><span style={{ color: '#7ee787' }}>\resumeItem</span>&#123;Configured local Linux sandbox for permissions &amp; security&#125;</p>
-              <p style={{ margin: 0, paddingLeft: 12 }}><span style={{ color: '#79c0ff' }}>\resumeItemListEnd</span></p>
-              <p style={{ margin: 0 }}><span style={{ color: '#ff7b72' }}>\end</span>&#123;document&#125;</p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── IRUS AI SECTION ── */}
-        <section id="irus-ai" style={{ padding: '60px 24px', maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{
-            background: 'linear-gradient(135deg, rgba(124,111,255,0.1) 0%, rgba(255,107,157,0.06) 100%)',
-            border: '1px solid rgba(124,111,255,0.25)', borderRadius: 'var(--radius-xl)',
-            padding: '40px 32px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: 32, alignItems: 'center'
-          }}>
-            <div>
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, padding: '4px 12px', borderRadius: 20, background: 'rgba(124,111,255,0.15)', color: 'var(--accent)', fontSize: 12, fontWeight: 700, marginBottom: 12 }}>
-                🤖 IRUS AI Integration
-              </div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 3.2vw, 38px)', fontWeight: 800, marginBottom: 14 }}>
-                Supercharge Your Bullets with IRUS AI
-              </h2>
-              <p style={{ color: 'var(--text-secondary)', fontSize: 14.5, lineHeight: 1.6, marginBottom: 20 }}>
-                Powered directly by <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 700 }}>irus-ai.onrender.com</a>. Transform weak task descriptions into quantified, high-impact bullet points with tailored tone presets (Executive, Technical, Startup, High-Impact ATS).
-              </p>
-              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" className="btn btn-secondary btn-md">
-                  Visit IRUS AI Platform ↗
-                </a>
-                <button onClick={() => handleStartBuilding()} className="btn btn-primary btn-md">
-                  Try AI Resume Generator →
-                </button>
-              </div>
-            </div>
-
-            {/* Before vs After Card */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10, padding: '14px 18px' }}>
-                <div style={{ fontSize: 11, fontWeight: 800, color: '#ef4444', textTransform: 'uppercase', marginBottom: 4 }}>❌ Generic / Weak Bullet</div>
-                <div style={{ fontSize: 13, color: 'var(--text-muted)' }}>"Worked on Linux scripts and checked firewall ports."</div>
-              </div>
-              <div style={{ background: 'rgba(61,224,160,0.1)', border: '1px solid rgba(61,224,160,0.3)', borderRadius: 10, padding: '14px 18px' }}>
-                <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--success)', textTransform: 'uppercase', marginBottom: 4 }}>✨ IRUS AI Optimized Bullet</div>
-                <div style={{ fontSize: 13, color: 'var(--text-primary)', fontWeight: 500 }}>
-                  "Engineered automated Bash security scripts and hardened SSH key access, reducing unauthorized port exposure by 100% across test environments."
+              {/* Responsive Container for Resume Preview */}
+              <div style={{
+                flex: 1,
+                padding: '20px 12px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                overflow: 'auto',
+                maxHeight: 560
+              }}>
+                <div style={{
+                  display: 'inline-block',
+                  borderRadius: 4,
+                  boxShadow: '0 20px 60px rgba(0,0,0,0.85)'
+                }}>
+                  <ResumePreview
+                    data={liveMockData}
+                    template={selectedTemplate}
+                    scale={0.62}
+                    accentColor={TEMPLATE_PREVIEWS.find(t => t.id === selectedTemplate)?.color || '#2997ff'}
+                  />
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* ── FEATURES GRID ── */}
-        <section id="features" style={{ padding: '60px 24px 80px', maxWidth: 1200, margin: '0 auto' }}>
+        {/* ── SECTION 3: OVERLEAF LATEX STUDIO (#latex) ── */}
+        <section id="latex" style={{
+          padding: '70px 24px',
+          maxWidth: 1140,
+          margin: '0 auto',
+          position: 'relative'
+        }}>
+          <div style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-2xl)',
+            padding: '48px 36px',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: 40,
+            alignItems: 'center'
+          }}>
+            <div>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '4px 12px',
+                borderRadius: 'var(--radius-pill)',
+                background: 'rgba(48, 209, 88, 0.1)',
+                color: 'var(--success)',
+                fontSize: 11.5,
+                fontWeight: 600,
+                marginBottom: 16
+              }}>
+                ⌨️ Overleaf LaTeX Studio
+              </span>
+              <h2 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(26px, 3.2vw, 40px)',
+                fontWeight: 700,
+                letterSpacing: '-0.03em',
+                marginBottom: 16
+              }}>
+                FAANG-Standard LaTeX code compilation.
+              </h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.6, marginBottom: 24 }}>
+                Write clean, industry-standard LaTeX utilizing Jake's Resume macros (<code style={{ color: 'var(--success)', fontFamily: 'var(--font-mono)' }}>\resumeSubheading</code>, <code style={{ color: 'var(--success)', fontFamily: 'var(--font-mono)' }}>\resumeItem</code>). Compile in real-time or export raw <code style={{ color: 'var(--success)', fontFamily: 'var(--font-mono)' }}>.tex</code> code directly to Overleaf.
+              </p>
+              <button
+                onClick={() => handleStartBuilding('technical')}
+                className="btn btn-primary btn-md"
+              >
+                Launch LaTeX Studio →
+              </button>
+            </div>
+
+            {/* Apple macOS Code Terminal Card */}
+            <div style={{
+              background: '#070709',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius-lg)',
+              overflow: 'hidden',
+              boxShadow: 'var(--shadow-lg)'
+            }}>
+              <div style={{
+                height: 38,
+                background: 'rgba(255, 255, 255, 0.03)',
+                borderBottom: '1px solid var(--border)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0 16px',
+                gap: 8
+              }}>
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f56' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ffbd2e' }} />
+                <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#27c93f' }} />
+                <span style={{ fontSize: 11.5, color: 'var(--text-muted)', marginLeft: 8 }}>
+                  resume_architect.tex
+                </span>
+              </div>
+              <div style={{
+                padding: '20px 22px',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 12.5,
+                lineHeight: 1.65,
+                color: '#e6edf3',
+                overflowX: 'auto'
+              }}>
+                <p style={{ margin: 0, color: 'var(--text-muted)' }}>% FAANG Overleaf LaTeX Template</p>
+                <p style={{ margin: 0 }}><span style={{ color: '#ff7b72' }}>\begin</span>&#123;document&#125;</p>
+                <p style={{ margin: 0, paddingLeft: 14 }}><span style={{ color: '#79c0ff' }}>\resumeSubheading</span></p>
+                <p style={{ margin: 0, paddingLeft: 28 }}>&#123;NEJAMUL HAQUE&#125;&#123;Bettiah, Bihar, India&#125;</p>
+                <p style={{ margin: 0, paddingLeft: 28 }}>&#123;DevSecOps Aspirant&#125;&#123;2023 -- 2027&#125;</p>
+                <p style={{ margin: 0, paddingLeft: 14 }}><span style={{ color: '#79c0ff' }}>\resumeItemListStart</span></p>
+                <p style={{ margin: 0, paddingLeft: 28 }}><span style={{ color: '#7ee787' }}>\resumeItem</span>&#123;Engineered automated Bash scripts &amp; hardened SSH keys&#125;</p>
+                <p style={{ margin: 0, paddingLeft: 14 }}><span style={{ color: '#79c0ff' }}>\resumeItemListEnd</span></p>
+                <p style={{ margin: 0 }}><span style={{ color: '#ff7b72' }}>\end</span>&#123;document&#125;</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 4: IRUS AI INTEGRATION (#irus-ai) ── */}
+        <section id="irus-ai" style={{
+          padding: '70px 24px',
+          maxWidth: 1140,
+          margin: '0 auto',
+          position: 'relative'
+        }}>
+          <div style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-2xl)',
+            padding: '48px 36px',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gap: 40,
+            alignItems: 'center'
+          }}>
+            <div>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '4px 12px',
+                borderRadius: 'var(--radius-pill)',
+                background: 'rgba(41, 151, 255, 0.1)',
+                color: 'var(--accent)',
+                fontSize: 11.5,
+                fontWeight: 600,
+                marginBottom: 16
+              }}>
+                🤖 IRUS AI Copilot
+              </span>
+              <h2 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(26px, 3.2vw, 40px)',
+                fontWeight: 700,
+                letterSpacing: '-0.03em',
+                marginBottom: 16
+              }}>
+                Transform tasks into quantified accomplishments.
+              </h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: 15, lineHeight: 1.6, marginBottom: 24 }}>
+                Powered directly by <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', fontWeight: 600 }}>irus-ai.onrender.com</a>. Turn basic responsibilities into punchy, metric-driven achievements tailored for tech recruiters.
+              </p>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" className="btn btn-secondary btn-md">
+                  Visit IRUS AI Platform ↗
+                </a>
+                <button onClick={() => handleStartBuilding()} className="btn btn-primary btn-md">
+                  Try AI Bullet Generator →
+                </button>
+              </div>
+            </div>
+
+            {/* Before vs After Cards */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{
+                background: 'rgba(255, 69, 58, 0.06)',
+                border: '1px solid rgba(255, 69, 58, 0.2)',
+                borderRadius: 'var(--radius-md)',
+                padding: '16px 20px'
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--danger)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+                  Before: Generic &amp; Passive
+                </div>
+                <div style={{ fontSize: 13.5, color: 'var(--text-muted)' }}>
+                  "Worked on Linux scripts and checked firewall ports."
+                </div>
+              </div>
+
+              <div style={{
+                background: 'rgba(48, 209, 88, 0.08)',
+                border: '1px solid rgba(48, 209, 88, 0.25)',
+                borderRadius: 'var(--radius-md)',
+                padding: '16px 20px'
+              }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--success)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>
+                  After: IRUS AI Quantified Achievement
+                </div>
+                <div style={{ fontSize: 13.5, color: 'var(--text-primary)', fontWeight: 500, lineHeight: 1.55 }}>
+                  "Engineered automated Bash security scripts and hardened SSH access, reducing unauthorized port exposure by 100% across test environments."
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── SECTION 5: FEATURES BENTO GRID (#features) ── */}
+        <section id="features" style={{
+          padding: '70px 24px',
+          maxWidth: 1140,
+          margin: '0 auto',
+          position: 'relative'
+        }}>
           <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 3.5vw, 42px)', fontWeight: 800, marginBottom: 12 }}>
-              Engineered for Speed, Privacy &amp; Results
+            <span style={{
+              fontSize: 11.5,
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: 'var(--accent)',
+              display: 'inline-block',
+              marginBottom: 10
+            }}>
+              Core Capabilities
+            </span>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(28px, 3.8vw, 44px)',
+              fontWeight: 700,
+              letterSpacing: '-0.03em',
+              marginBottom: 14
+            }}>
+              Engineered for speed, security &amp; privacy.
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: 15 }}>
-              Everything you need to beat ATS filters and impress hiring managers.
+            <p style={{ color: 'var(--text-secondary)', fontSize: 16, maxWidth: 640, margin: '0 auto', letterSpacing: '-0.01em' }}>
+              Everything candidates need to beat ATS filters, safeguard personal secrets, and stand out.
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 20 }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+            gap: 18
+          }}>
             {FEATURES.map((feat, idx) => (
               <div
                 key={idx}
                 style={{
-                  background: 'var(--bg-card)', border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-lg)', padding: 24, transition: 'transform 0.2s',
-                  display: 'flex', flexDirection: 'column', gap: 10
+                  background: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderRadius: 'var(--radius-lg)',
+                  padding: 24,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 12,
+                  transition: 'border-color var(--transition)'
                 }}
               >
-                <div style={{ fontSize: 32 }}>{feat.icon}</div>
-                <h3 style={{ fontSize: 17, fontWeight: 700, margin: 0 }}>{feat.title}</h3>
+                <div style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 10,
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid var(--border)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--text-primary)'
+                }}>
+                  {feat.icon}
+                </div>
+                <h3 style={{ fontSize: 16, fontWeight: 600, letterSpacing: '-0.02em', margin: 0 }}>
+                  {feat.title}
+                </h3>
                 <p style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.55, margin: 0 }}>
                   {feat.desc}
                 </p>
@@ -604,98 +1032,150 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* ── CONTACT US / ABOUT DEVELOPER SECTION ── */}
-        <section id="contact" style={{ padding: '60px 24px 80px', maxWidth: 1100, margin: '0 auto' }}>
+        {/* ── SECTION 6: CONTACT & CREATOR PROFILE (#contact) ── */}
+        <section id="contact" style={{
+          padding: '70px 24px',
+          maxWidth: 1140,
+          margin: '0 auto',
+          position: 'relative'
+        }}>
           <div style={{
-            background: 'var(--bg-elevated)', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-xl)', padding: '40px 32px'
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius-2xl)',
+            padding: '48px 36px'
           }}>
-            <div style={{ textAlign: 'center', marginBottom: 36 }}>
-              <div style={{ display: 'inline-block', fontSize: 12, fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
-                💬 Get in Touch
-              </div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 3.2vw, 38px)', fontWeight: 800, marginBottom: 10 }}>
+            <div style={{ textAlign: 'center', marginBottom: 40 }}>
+              <span style={{
+                fontSize: 11.5,
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.08em',
+                color: 'var(--accent)',
+                display: 'inline-block',
+                marginBottom: 8
+              }}>
+                Get In Touch
+              </span>
+              <h2 style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(26px, 3.2vw, 40px)',
+                fontWeight: 700,
+                letterSpacing: '-0.03em',
+                marginBottom: 10
+              }}>
                 Contact Developer &amp; Creator
               </h2>
-              <p style={{ color: 'var(--text-muted)', fontSize: 15 }}>
-                Have questions, feature suggestions, or security feedback? We are always here to help.
+              <p style={{ color: 'var(--text-secondary)', fontSize: 15 }}>
+                Have questions, feature requests, or security feedback? We are here to help.
               </p>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32 }}>
-              {/* Direct Reach-Out Info */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: 24 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gap: 36
+            }}>
+              {/* Creator Info Card */}
+              <div style={{
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-xl)',
+                padding: 28,
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
                     <div style={{
-                      width: 44, height: 44, borderRadius: 12,
-                      background: 'linear-gradient(135deg, var(--accent), var(--accent-2))',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 18, fontWeight: 800, color: '#fff'
+                      width: 48,
+                      height: 48,
+                      borderRadius: 12,
+                      background: '#ffffff',
+                      color: '#000000',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 18,
+                      fontWeight: 800
                     }}>
                       NH
                     </div>
                     <div>
-                      <h3 style={{ fontSize: 16.5, fontWeight: 800, margin: 0 }}>NEJAMUL HAQUE</h3>
-                      <p style={{ fontSize: 12, color: 'var(--accent)', fontWeight: 600, margin: 0 }}>
+                      <h3 style={{ fontSize: 17, fontWeight: 700, letterSpacing: '-0.02em', margin: 0 }}>
+                        NEJAMUL HAQUE
+                      </h3>
+                      <p style={{ fontSize: 12.5, color: 'var(--accent)', fontWeight: 500, margin: 0 }}>
                         Computer Science Undergraduate | DevSecOps Aspirant
                       </p>
                     </div>
                   </div>
 
-                  <p style={{ fontSize: 12.5, color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: 16 }}>
+                  <p style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: 20 }}>
                     Specializing in backend architecture, Linux system administration, network security, and infrastructure automation. Creator of ProResume Builder &amp; IRUS AI.
                   </p>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 12.5 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                      <span>📧</span>
-                      <a href="mailto:nejamulhaqueruhaan86@gmail.com" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
-                        nejamulhaqueruhaan86@gmail.com
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12, fontSize: 13 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Email:</span>
+                      <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 500 }}>
+                        {CONTACT_EMAIL}
                       </a>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                      <span>📱</span>
-                      <span style={{ color: 'var(--text-secondary)' }}>+91-6299676007 (Bettiah, Bihar, India)</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Phone:</span>
+                      <span style={{ color: 'var(--text-primary)' }}>+91-6299676007 (Bettiah, Bihar, India)</span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                      <span>🌐</span>
-                      <a href={PORTFOLIO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>
-                        nejamulhaque.vercel.app
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>Portfolio:</span>
+                      <a href={PORTFOLIO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 500 }}>
+                        nejamulhaque.vercel.app ↗
                       </a>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                      <span>🐙</span>
-                      <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" style={{ color: '#fff', textDecoration: 'none', fontWeight: 600 }}>
-                        github.com/NejamulHaque
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>GitHub:</span>
+                      <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--text-primary)', textDecoration: 'none', fontWeight: 500 }}>
+                        github.com/NejamulHaque ↗
                       </a>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
-                      <span>🤖</span>
-                      <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" style={{ color: '#3de0a0', textDecoration: 'none', fontWeight: 600 }}>
-                        irus-ai.onrender.com
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <span style={{ color: 'var(--text-muted)' }}>IRUS AI:</span>
+                      <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--success)', textDecoration: 'none', fontWeight: 500 }}>
+                        irus-ai.onrender.com ↗
                       </a>
                     </div>
                   </div>
+                </div>
 
-                  <div style={{
-                    marginTop: 18, padding: '8px 12px', borderRadius: 8,
-                    background: 'rgba(61,224,160,0.1)', border: '1px solid rgba(61,224,160,0.25)',
-                    fontSize: 12, color: 'var(--success)', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 6
-                  }}>
-                    <span>⚡</span> Typical response time: &lt; 2 hours
-                  </div>
+                <div style={{
+                  marginTop: 24,
+                  padding: '10px 14px',
+                  borderRadius: 'var(--radius-sm)',
+                  background: 'rgba(48, 209, 88, 0.08)',
+                  border: '1px solid rgba(48, 209, 88, 0.2)',
+                  fontSize: 12,
+                  color: 'var(--success)',
+                  fontWeight: 500
+                }}>
+                  ⚡ Typical developer response time: &lt; 2 hours
                 </div>
               </div>
 
-              {/* Interactive Contact Form */}
+              {/* Contact Form */}
               <form onSubmit={handleContactSubmit} aria-label="Contact Developer Form" style={{
-                background: 'var(--bg-card)', border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-lg)', padding: 24, display: 'flex', flexDirection: 'column', gap: 14
+                background: 'var(--bg-elevated)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-xl)',
+                padding: 28,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 16
               }}>
                 <div className="form-group">
-                  <label className="form-label required">Your Name</label>
+                  <label htmlFor="contact-name" className="form-label required">Your Name</label>
                   <input
+                    id="contact-name"
                     className="input"
                     placeholder="John Doe"
                     required
@@ -705,8 +1185,9 @@ export default function LandingPage() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label required">Your Email</label>
+                  <label htmlFor="contact-email" className="form-label required">Your Email</label>
                   <input
+                    id="contact-email"
                     className="input"
                     type="email"
                     required
@@ -717,22 +1198,24 @@ export default function LandingPage() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Subject</label>
+                  <label htmlFor="contact-subject" className="form-label">Subject</label>
                   <input
+                    id="contact-subject"
                     className="input"
-                    placeholder="Feature suggestion / feedback"
+                    placeholder="Feature suggestion / security inquiry"
                     value={contactForm.subject}
                     onChange={e => setContactForm({ ...contactForm, subject: e.target.value })}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label required">Message</label>
+                  <label htmlFor="contact-message" className="form-label required">Message</label>
                   <textarea
+                    id="contact-message"
                     className="input"
                     rows={4}
                     required
-                    placeholder="Tell us what you think or how we can help..."
+                    placeholder="How can we help or collaborate?"
                     value={contactForm.message}
                     onChange={e => setContactForm({ ...contactForm, message: e.target.value })}
                   />
@@ -742,104 +1225,177 @@ export default function LandingPage() {
                   type="submit"
                   disabled={sendingContact}
                   className="btn btn-primary btn-lg"
-                  style={{ width: '100%', justifyContent: 'center', marginTop: 4, fontWeight: 700 }}
+                  style={{ width: '100%', marginTop: 6 }}
                 >
-                  {sendingContact ? <><div className="spinner sm" /> Sending...</> : 'Send Message ✉️'}
+                  {sendingContact ? 'Sending Message…' : 'Send Message →'}
                 </button>
               </form>
             </div>
           </div>
         </section>
 
-        {/* ── FAQ ACCORDION ── */}
-        <section id="faq" style={{ padding: '60px 24px 80px', maxWidth: 880, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 40 }}>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 3.2vw, 38px)', fontWeight: 800, marginBottom: 10 }}>
+        {/* ── SECTION 7: FAQ ACCORDION (#faq) ── */}
+        <section id="faq" style={{
+          padding: '70px 24px 100px',
+          maxWidth: 820,
+          margin: '0 auto',
+          position: 'relative'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: 44 }}>
+            <span style={{
+              fontSize: 11.5,
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              color: 'var(--accent)',
+              display: 'inline-block',
+              marginBottom: 10
+            }}>
+              Answers
+            </span>
+            <h2 style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(28px, 3.8vw, 42px)',
+              fontWeight: 700,
+              letterSpacing: '-0.03em',
+              marginBottom: 12
+            }}>
               Frequently Asked Questions
             </h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: 14.5 }}>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 15, letterSpacing: '-0.01em' }}>
               Everything you need to know about Overleaf LaTeX, ATS scoring, and cloud privacy.
             </p>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {FAQS.map((faq, idx) => (
-              <div
-                key={idx}
-                onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                style={{
-                  background: 'var(--bg-card)', border: '1px solid var(--border)',
-                  borderRadius: 'var(--radius-md)', padding: '18px 22px', cursor: 'pointer',
-                  transition: 'all 0.15s'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 700, fontSize: 15.5 }}>
-                  <span>{faq.q}</span>
-                  <span style={{ color: 'var(--accent)', fontSize: 18 }}>{activeFaq === idx ? '−' : '+'}</span>
+            {FAQS.map((faq, idx) => {
+              const isOpen = activeFaq === idx
+              return (
+                <div
+                  key={idx}
+                  onClick={() => setActiveFaq(isOpen ? null : idx)}
+                  style={{
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '20px 24px',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 600, fontSize: 15.5, letterSpacing: '-0.015em' }}>
+                    <span>{faq.q}</span>
+                    <span style={{ color: 'var(--text-muted)', fontSize: 18 }}>{isOpen ? '−' : '+'}</span>
+                  </div>
+                  {isOpen && (
+                    <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 14, lineHeight: 1.65, letterSpacing: '-0.01em' }}>
+                      {faq.a}
+                    </p>
+                  )}
                 </div>
-                {activeFaq === idx && (
-                  <p style={{ color: 'var(--text-muted)', fontSize: 13.8, marginTop: 12, lineHeight: 1.68 }}>
-                    {faq.a}
-                  </p>
-                )}
-              </div>
-            ))}
+              )
+            })}
           </div>
         </section>
 
-        {/* ── FOOTER ── */}
-        <footer role="contentinfo" style={{ padding: '50px 24px 40px', borderTop: '1px solid var(--border)', background: 'var(--bg-elevated)' }}>
-          <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 32, marginBottom: 40 }}>
-            
-            {/* Brand column */}
+        {/* ── FOOTER (Apple Minimal Multi-Column) ── */}
+        <footer role="contentinfo" style={{
+          padding: '60px 24px 44px',
+          borderTop: '1px solid var(--border)',
+          background: 'var(--bg-card)'
+        }}>
+          <div style={{
+            maxWidth: 1140,
+            margin: '0 auto',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 36,
+            marginBottom: 44
+          }}>
+            {/* Column 1: Brand */}
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                <span>📄</span>
-                <span style={{ fontWeight: 800, fontSize: 18, fontFamily: 'var(--font-display)' }}>
-                  ATS<span className="gradient-text">Resume</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
+                <div style={{
+                  width: 24,
+                  height: 24,
+                  borderRadius: 6,
+                  background: '#ffffff',
+                  color: '#000000',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 12,
+                  fontWeight: 800
+                }}>
+                  P
+                </div>
+                <span style={{ fontWeight: 700, fontSize: 16, letterSpacing: -0.3 }}>
+                  ProResume
                 </span>
               </div>
-              <p style={{ fontSize: 13, color: 'var(--text-muted)', lineHeight: 1.6 }}>
-                Open-source, privacy-first resume builder and Overleaf LaTeX studio. Free forever under the MIT license.
+              <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                Open-source, privacy-first resume builder and Overleaf LaTeX studio. 100% free under the MIT License.
               </p>
             </div>
 
-            {/* Navigation links */}
+            {/* Column 2: Product */}
             <div>
-              <h4 style={{ fontSize: 13.5, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>Product</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
-                <a href="#templates" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>5 Resume Templates</a>
-                <a href="#latex" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Overleaf LaTeX Studio</a>
-                <a href="#irus-ai" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>IRUS AI Integration</a>
-                <a href="#simulator" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Live ATS Simulator</a>
+              <h3 style={{ fontSize: 13, fontWeight: 600, marginBottom: 14, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                Product
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
+                <a href="#templates" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>5 Resume Templates</a>
+                <a href="#simulator" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Live ATS Simulator</a>
+                <a href="#latex" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Overleaf LaTeX Studio</a>
+                <a href="#irus-ai" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>IRUS AI Integration</a>
               </div>
             </div>
 
-            {/* Legal Links */}
+            {/* Column 3: Legal & Privacy */}
             <div>
-              <h4 style={{ fontSize: 13.5, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>Legal &amp; Privacy</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
-                <Link to="/privacy" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Privacy Policy</Link>
-                <Link to="/terms" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>Terms of Service</Link>
+              <h3 style={{ fontSize: 13, fontWeight: 600, marginBottom: 14, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                Legal &amp; Privacy
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
+                <Link to="/privacy" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Privacy Policy</Link>
+                <Link to="/terms" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Terms of Service</Link>
                 <span style={{ color: 'var(--warning)', fontSize: 12 }}>⏳ 10-Day Ephemeral Retention</span>
               </div>
             </div>
 
-            {/* Creator links */}
+            {/* Column 4: Creator */}
             <div>
-              <h4 style={{ fontSize: 13.5, fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>Creator</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
-                <a href={PORTFOLIO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 600 }}>Nejamul Haque Portfolio ↗</a>
-                <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>GitHub Repository ↗</a>
-                <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" style={{ color: '#3de0a0', textDecoration: 'none' }}>IRUS AI Platform ↗</a>
-                <a href="mailto:nejamulhaqueruhaan86@gmail.com" style={{ color: 'var(--text-muted)', textDecoration: 'none' }}>nejamulhaqueruhaan86@gmail.com</a>
+              <h3 style={{ fontSize: 13, fontWeight: 600, marginBottom: 14, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>
+                Creator
+              </h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
+                <a href={PORTFOLIO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none', fontWeight: 500 }}>
+                  Nejamul Haque Portfolio ↗
+                </a>
+                <a href={GITHUB_REPO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>
+                  GitHub Repository ↗
+                </a>
+                <a href={IRUS_AI_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--success)', textDecoration: 'none' }}>
+                  IRUS AI Platform ↗
+                </a>
+                <a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>
+                  {CONTACT_EMAIL}
+                </a>
               </div>
             </div>
-
           </div>
 
-          <div style={{ textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: 24, fontSize: 12.5, color: 'var(--text-muted)' }}>
-            © 2026 ATS Resume Architect. Built with ❤️ &amp; IRUS AI by <strong>Nejamul Haque</strong>.
+          <div style={{
+            textAlign: 'center',
+            borderTop: '1px solid var(--border)',
+            paddingTop: 24,
+            fontSize: 12.5,
+            color: 'var(--text-muted)'
+          }}>
+            © 2026 ProResume Builder. Open source by{' '}
+            <a href={PORTFOLIO_URL} target="_blank" rel="noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>
+              Nejamul Haque
+            </a>.
           </div>
         </footer>
 

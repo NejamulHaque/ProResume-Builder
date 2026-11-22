@@ -33,7 +33,7 @@ function FullPageSpinner() {
     <div className="full-page-center" role="status" aria-label="Loading page">
       <div style={{ textAlign: 'center' }}>
         <div className="spinner lg" style={{ margin: '0 auto 16px' }} />
-        <p className="text-muted" style={{ fontSize: 14 }}>Loading ProResume…</p>
+        <p className="text-muted" style={{ fontSize: 14 }}>Loading ATS Resume Architect…</p>
       </div>
     </div>
   )

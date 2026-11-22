@@ -92,7 +92,8 @@ function EditorBar({
 
   return (
     <div style={{
-      height: 60, background: 'rgba(15, 15, 24, 0.95)', backdropFilter: 'blur(16px)',
+      height: 56, background: 'rgba(0, 0, 0, 0.75)', backdropFilter: 'saturate(180%) blur(20px)',
+      WebkitBackdropFilter: 'saturate(180%) blur(20px)',
       borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center',
       justifyContent: 'space-between', padding: '0 18px', flexShrink: 0, gap: 14, zIndex: 100,
     }}>

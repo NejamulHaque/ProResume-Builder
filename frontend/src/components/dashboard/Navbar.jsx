@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '../../hooks/useAuth.jsx'
 import { signOut } from '../../lib/supabase.js'
+import { ADMIN_EMAIL } from '../../lib/constants.js'
 
 export default function Navbar() {
   const { displayName, avatarUrl, initials, user, logout } = useAuth()
@@ -10,7 +11,7 @@ export default function Navbar() {
   const [dropOpen, setDropOpen] = useState(false)
   const [signingOut, setSigningOut] = useState(false)
 
-  const isAdmin = user?.email === 'nejamulhaque.works@gmail.com'
+  const isAdmin = user?.email === ADMIN_EMAIL
 
   const handleSignOut = async () => {
     setSigningOut(true)
@@ -29,9 +30,9 @@ export default function Navbar() {
 
   return (
     <nav style={{
-      height: 62, background: 'rgba(15,15,24,0.92)',
-      backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
-      borderBottom: '1px solid var(--border)', padding: '0 20px',
+      height: 56, background: 'rgba(0, 0, 0, 0.75)',
+      backdropFilter: 'saturate(180%) blur(20px)', WebkitBackdropFilter: 'saturate(180%) blur(20px)',
+      borderBottom: '1px solid var(--border)', padding: '0 24px',
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       position: 'sticky', top: 0, zIndex: 100, flexShrink: 0,
     }}>

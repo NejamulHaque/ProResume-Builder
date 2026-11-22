@@ -10,6 +10,7 @@ import {
   deleteResume,
   duplicateResume,
   setVisibility,
+  renderPdf,
 } from '../controllers/resumeController.js'
 
 const router = Router()
@@ -60,6 +61,13 @@ router.post(
   requireAuth,
   validate(schemas.uuidParam, 'params'),
   asyncHandler(duplicateResume),
+)
+
+// ── Server-side vector PDF generation via puppeteer-core ──────────────
+router.post(
+  '/render-pdf',
+  optionalAuth,
+  asyncHandler(renderPdf),
 )
 
 // ── Toggle public / private visibility ────────────────────────────────
